@@ -16,16 +16,16 @@ test('valid adult registration passes', () => {
 });
 
 test('minor needs a guardian', () => {
-  const r = validateRegistration({ ...base, dob: '2016-01-01' }, today);
+  const r = validateRegistration({ ...base, dob: '2012-01-01' }, today);
   assert.equal(r.ok, false);
   assert.match(r.error, /guardian/);
-  assert.equal(validateRegistration({ ...base, dob: '2016-01-01', guardian_name: 'Ken Tanaka' }, today).ok, true);
+  assert.equal(validateRegistration({ ...base, dob: '2012-01-01', guardian_name: 'Ken Tanaka' }, today).ok, true);
 });
 
-test('students must be at least 10', () => {
-  const r = validateRegistration({ ...base, dob: '2017-06-01', guardian_name: 'Ken Tanaka' }, today);
+test('students must be at least 13', () => {
+  const r = validateRegistration({ ...base, dob: '2014-06-01', guardian_name: 'Ken Tanaka' }, today);
   assert.equal(r.ok, false);
-  assert.match(r.error, /10 or older/);
+  assert.match(r.error, /13 or older/);
 });
 
 test('missing required fields and waiver are rejected', () => {

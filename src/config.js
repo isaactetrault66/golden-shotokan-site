@@ -31,12 +31,10 @@ export const DEFAULT_SCHEDULE = [
 ];
 
 // Fees are per term and include uniform, insurance and training.
-// TODO: confirm the 10 to 12 price (the Facebook post lists 13+ only).
 export const PRICING = {
   term: 'September to the end of January',
   includes: 'Uniform, insurance and all training',
   rates: [
-    { group: 'Kids (10 to 12)', price: 'Ask us' },
     { group: 'Teens (13 to 17)', price: '$495' },
     { group: 'Adults (18+)', price: '$570' },
   ],
@@ -55,13 +53,12 @@ export const fmtRange = (start, end) => {
   return a.pm === b.pm ? `${a.text} to ${b.text} ${ap(b.pm)}` : `${a.text} ${ap(a.pm)} to ${b.text} ${ap(b.pm)}`;
 };
 
-// Classes are mixed-age, from age 10 up. This guide explains who each class
+// Classes are for ages 13 and up. This guide explains who each class
 // suits. Split into separate programs later if classes split.
 export const AGE_GUIDE = [
-  { group: 'Kids', ages: '10 to 12', text: 'Focus, confidence, respect and coordination. Kids train alongside older students and progress through the same belt ranks.' },
   { group: 'Teens', ages: '13 to 17', text: 'Fitness, self-defence and discipline, with a clear path toward black belt.' },
   { group: 'Adults', ages: '18 and up', text: 'Traditional technique, kata and sparring at your own pace. Many adults start with no experience, at any age.' },
-  { group: 'Families', ages: 'Parents and kids 10+', text: 'Parents and children 10 and older are welcome to train in the same class.' },
+  { group: 'Families', ages: 'Parents and teens', text: 'Parents and their teenagers are welcome to train in the same class.' },
 ];
 
 // Cloudflare Turnstile public site key (spam check). The secret key lives in

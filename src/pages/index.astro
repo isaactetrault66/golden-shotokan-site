@@ -8,20 +8,20 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
 ---
 <Base
   title="Shotokan Karate Classes in Golden, BC | Golden Shotokan Karate Association"
-  description="Traditional ISKF Shotokan karate in Golden, BC for kids, teens and adults. Classes Monday and Wednesday evenings. Affordable, beginner friendly. Register online."
+  description="Traditional ISKF Shotokan karate in Golden, BC for teens and adults, ages 13+. Classes Monday and Wednesday evenings. Affordable, beginner friendly. Register online."
 >
   <section class="hero">
     <div class="wrap">
       <p class="eyebrow">Golden, British Columbia</p>
       <h1>Shotokan Karate in Golden, BC</h1>
-      <p class="lead">Traditional ISKF karate for kids, teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
+      <p class="lead">Traditional ISKF karate for teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="/register">Join now</a>
         <a class="btn btn-ghost" href="/first-class">What to expect</a>
       </div>
       <ul class="hero-facts">
         <li><strong>Mon and Wed</strong> 6:00 to 7:30 pm</li>
-        <li><strong>Ages 10+</strong> kids, teens and adults</li>
+        <li><strong>Ages 13+</strong> teens and adults</li>
         <li><strong>ISKF</strong> member club</li>
       </ul>
     </div>
@@ -29,10 +29,10 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
 
   <section class="section">
     <div class="wrap">
-      <h2>Karate for every age in Golden</h2>
-      <p class="prose">Our classes are mixed-age, so kids, teens, adults and whole families train together on the same nights. Everyone follows the same belt path, and instructors adjust each drill to the student.</p>
+      <h2>Karate for teens and adults in Golden</h2>
+      <p class="prose">Teens and adults, including parents and their teenagers, train together on the same nights. Everyone follows the same belt path, and instructors adjust each drill to the student.</p>
       <div class="grid">
-        {AGE_GUIDE.slice(0, 3).map((a) => (
+        {AGE_GUIDE.map((a) => (
           <div class="card">
             <h3>{a.group} <span class="muted">({a.ages})</span></h3>
             <p>{a.text}</p>

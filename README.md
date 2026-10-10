@@ -29,15 +29,14 @@ Search the code for `TODO`. Most live in **`src/config.js`**:
 - [ ] Exact map pin for the dojo (`SITE.geo`)
 - [ ] Domain name (`SITE.url`, also in `astro.config.mjs` via config, `public/robots.txt`, `wrangler.toml`)
 - [x] Term prices for 13 to 17 and 18+ (`PRICING`)
-- [ ] Price for ages 10 to 12
-- [x] Minimum age 10 (`MIN_AGE` in `lib/registration.js`)
+- [x] Minimum age 13 (`MIN_AGE` in `lib/registration.js`)
 - [ ] Instructor bio and photo for Sensei Tyler Tetrault, plus any assistant instructors (`src/pages/instructors.astro`)
 - [ ] Club history (`src/pages/about.astro`)
 - [x] Entrance: east side door of the Golden Child Daycare building
 - [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
 - [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
 - [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the Golden Dojo page.
-- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching kids hold criminal record checks and first aid
+- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching under-18 students hold criminal record checks and first aid
 
 ## Run it locally
 
