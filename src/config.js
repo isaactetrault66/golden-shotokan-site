@@ -26,8 +26,8 @@ export const SITE = {
 // Default class times. Shown in page HTML (for Google) and replaced at
 // runtime by the schedule edited in the admin area.
 export const DEFAULT_SCHEDULE = [
-  { day: 'Monday', start: '18:00', end: '19:30', name: 'Karate class, all ages' },
-  { day: 'Wednesday', start: '18:00', end: '19:30', name: 'Karate class, all ages' },
+  { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class, all ages' },
+  { day: 'Wednesday', start: '18:00', end: '19:00', name: 'Karate class, all ages' },
 ];
 
 // Fees are per term and include uniform, insurance and training.
@@ -42,7 +42,7 @@ export const PRICING = {
 }
 
 
-// "18:00", "19:30" -> "6:00 to 7:30 pm"
+// "18:00", "19:00" -> "6:00 to 7:00 pm"
 export const fmtRange = (start, end) => {
   const part = (t) => {
     const [h, m] = t.split(':').map(Number);

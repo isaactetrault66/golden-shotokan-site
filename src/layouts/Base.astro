@@ -12,6 +12,8 @@ const business = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
   '@id': `${SITE.url}/#club`,
+  logo: `${SITE.url}/images/logo.png`,
+  image: `${SITE.url}/og-image.jpg`,
   name: SITE.name,
   description: `Traditional ${SITE.affiliation} Shotokan karate classes in ${SITE.city}, ${SITE.region} for teens and adults (13+).`,
   url: SITE.url,
@@ -62,7 +64,8 @@ const path = cleanPath;
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={`${SITE.url}/og-image.jpg`} />
     <meta property="og:locale" content="en_CA" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#14110f" />
     {!noindex && schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
@@ -71,7 +74,7 @@ const path = cleanPath;
     <header class="site-header">
       <div class="wrap header-inner">
         <a class="brand" href="/">
-          <img src="/favicon.svg" alt="" width="36" height="36" />
+          <img src="/images/logo-96.png" alt="" width="48" height="48" />
           <span><strong>Golden Dojo</strong><small>ISKF Shotokan Karate</small></span>
         </a>
         <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu" />

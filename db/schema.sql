@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS settings (
 
 -- Seed the current class times only if the schedule is empty.
 INSERT INTO schedule (sort, day, start, end, name)
-SELECT 1, 'Monday', '18:00', '19:30', 'Karate class, all ages'
+SELECT 1, 'Monday', '18:00', '19:00', 'Karate class, all ages'
 WHERE NOT EXISTS (SELECT 1 FROM schedule);
 INSERT INTO schedule (sort, day, start, end, name)
-SELECT 2, 'Wednesday', '18:00', '19:30', 'Karate class, all ages'
+SELECT 2, 'Wednesday', '18:00', '19:00', 'Karate class, all ages'
 WHERE (SELECT COUNT(*) FROM schedule) = 1;

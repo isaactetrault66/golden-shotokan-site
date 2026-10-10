@@ -10,7 +10,7 @@ import '../styles/global.css';
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Admin | Golden Dojo</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
   <style is:global>
     body { background: #f4f1ec; }
     .bar { background: var(--ink); color: #fff; }
@@ -257,7 +257,7 @@ import '../styles/global.css';
     }));
 
     // Schedule editor
-    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:30', name: 'Karate class, all ages' }) {
+    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class, all ages' }) {
       const div = document.createElement('div');
       div.className = 'sched-row';
       div.innerHTML = `<select data-k="day">${DAYS.map((d) => `<option ${d === c.day ? 'selected' : ''}>${d}</option>`).join('')}</select>
