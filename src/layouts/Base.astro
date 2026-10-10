@@ -1,0 +1,123 @@
+---
+import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
+import '../styles/global.css';
+
+const { title, description, schema = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const dayCode = { Monday: 'Mo', Tuesday: 'Tu', Wednesday: 'We', Thursday: 'Th', Friday: 'Fr', Saturday: 'Sa', Sunday: 'Su' };
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  '@id': `${SITE.url}/#club`,
+  name: SITE.name,
+  description: `Traditional ${SITE.affiliation} Shotokan karate classes in ${SITE.city}, ${SITE.region} for kids, teens and adults.`,
+  url: SITE.url,
+  telephone: SITE.phone,
+  email: SITE.email,
+  sport: 'Karate',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.street,
+    addressLocality: SITE.city,
+    addressRegion: SITE.region,
+    postalCode: SITE.postalCode,
+    addressCountry: SITE.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng },
+  areaServed: { '@type': 'City', name: `${SITE.city}, ${SITE.regionLong}` },
+  openingHours: DEFAULT_SCHEDULE.map((c) => `${dayCode[c.day]} ${c.start}-${c.end}`),
+  sameAs: [SITE.facebook, SITE.instagram].filter(Boolean),
+};
+const schemas = [business, ...schema];
+
+const nav = [
+  ['/classes', 'Classes'],
+  ['/instructors', 'Instructors'],
+  ['/first-class', 'Your First Class'],
+  ['/about', 'About'],
+  ['/faq', 'FAQ'],
+  ['/contact', 'Contact'],
+];
+const path = Astro.url.pathname.replace(/\.html$/, '');
+---
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="geo.region" content="CA-BC" />
+    <meta name="geo.placename" content={SITE.city} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE.url}/og-image.jpg`} />
+    <meta property="og:locale" content="en_CA" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#14110f" />
+    {!noindex && schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/">
+          <img src="/favicon.svg" alt="" width="36" height="36" />
+          <span><strong>Golden Shotokan</strong><small>Karate Association</small></span>
+        </a>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu" />
+        <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span></label>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map(([href, label]) => (
+              <li><a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
+            ))}
+          </ul>
+          <a class="btn btn-primary" href="/register">Join now</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-name">{SITE.name}</p>
+          <address>
+            {SITE.street}<br />
+            {SITE.city}, {SITE.region} {SITE.postalCode}<br />
+            <a href={`tel:${SITE.phone.replace(/[^\d+]/g, '')}`}>{SITE.phone}</a><br />
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          </address>
+        </div>
+        <div>
+          <p class="footer-head">Classes</p>
+          <ul class="plain">
+            {DEFAULT_SCHEDULE.map((c) => <li>{c.day}s, {fmtRange(c.start, c.end)}</li>)}
+          </ul>
+          <p class="muted">Member club of the {SITE.affiliation}</p>
+        </div>
+        <div>
+          <p class="footer-head">Links</p>
+          <ul class="plain">
+            <li><a href="/register">Register</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/privacy">Privacy policy</a></li>
+            {SITE.googleReviewUrl && <li><a href={SITE.googleReviewUrl} rel="noopener">Leave us a Google review</a></li>}
+            {SITE.facebook && <li><a href={SITE.facebook} rel="noopener">Facebook</a></li>}
+            {SITE.instagram && <li><a href={SITE.instagram} rel="noopener">Instagram</a></li>}
+          </ul>
+        </div>
+      </div>
+      <div class="wrap footer-base">© {new Date().getFullYear()} {SITE.name}, {SITE.city}, {SITE.regionLong}</div>
+    </footer>
+  </body>
+</html>

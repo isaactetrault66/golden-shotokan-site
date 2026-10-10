@@ -1,0 +1,14 @@
+name = "golden-shotokan-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "golden-shotokan"
+database_id = "REPLACE_WITH_D1_DATABASE_ID" # from: npx wrangler d1 create golden-shotokan
+
+[vars]
+SITE_URL = "https://goldenshotokan.ca"
+FROM_EMAIL = "Golden Shotokan <register@goldenshotokan.ca>"
+# Secrets set in the Cloudflare dashboard (never commit them):
+#   RESEND_API_KEY, TURNSTILE_SECRET, CLUB_EMAIL, ACCESS_TEAM_DOMAIN, ACCESS_AUD

@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+import { PRICING } from '../config.js';
+
+const faqs = [
+  ['Do I need any experience?', 'No. Most people start karate as complete beginners. Instructors teach every technique from the ground up.'],
+  ['How old do you have to be?', 'Our classes are mixed-age, and kids, teens and adults all train together. Contact us if you are unsure whether your child is ready.'],
+  ['How much does it cost?', `Monthly dues are ${PRICING.monthly}. ${PRICING.note} ISKF membership and grading fees are separate.`],
+  ['Do I have to sign a contract?', 'No. There are no long-term contracts.'],
+  ['When are classes?', 'Monday and Wednesday, 6:00 to 7:30 pm. See the classes page for any holiday closures.'],
+  ['How often should I train?', 'Coming to both weekly classes gives the fastest progress, but once a week is fine to start.'],
+  ['What should I wear to my first class?', 'Comfortable athletic clothes. We train barefoot. You can buy a karate uniform (gi) later.'],
+  ['Is karate safe for kids?', 'Yes. Partner work is controlled, matched by size and level, and closely supervised. Parents are welcome to watch.'],
+  ['Can adults start at 40 or older?', 'Absolutely. Many adults start later in life and train at their own pace.'],
+  ['How is Shotokan different from other styles?', 'Shotokan emphasises strong stances, long-range linear techniques and kata. It is one of the most widely practised traditional styles in the world.'],
+  ['Can parents and kids train together?', 'Yes. Because classes are mixed-age, families often train in the same class.'],
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+---
+<Base
+  title="Karate FAQ: Golden, BC"
+  description="Answers to common questions about Shotokan karate classes in Golden, BC: cost, ages, what to wear, contracts, safety and more."
+  schema={[faqSchema]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Frequently asked questions</h1>
+      <p>Everything new students and parents ask us about karate in Golden.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap prose">
+      {faqs.map(([q, a]) => (
+        <details>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+  <JoinCallout />
+</Base>

@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import Schedule from '../components/Schedule.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+import { PRICING, AGE_GUIDE, SITE } from '../config.js';
+
+const course = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: 'Shotokan Karate Classes in Golden, BC',
+  description: 'Mixed-age traditional ISKF Shotokan karate classes for kids, teens, adults and families in Golden, BC.',
+  provider: { '@id': `${SITE.url}/#club` },
+};
+---
+<Base
+  title="Karate Classes and Pricing in Golden, BC"
+  description="Kids, teen, adult and family karate classes in Golden, BC. Monday and Wednesday, 6:00 to 7:30 pm. See our age guide, belt ranks and affordable monthly pricing."
+  schema={[course]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Karate classes in Golden, BC</h1>
+      <p>Two classes a week, Monday and Wednesday evenings, open to every age and level.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <h2>Class schedule</h2>
+        <Schedule />
+        <p class="muted">Classes follow the local school calendar for holiday closures. Check this page or our Google listing before holidays.</p>
+      </div>
+      <div class="card">
+        <h2>Pricing</h2>
+        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
+        <p>{PRICING.note}</p>
+        <ul>
+          <li>Train at both weekly classes</li>
+          <li>Uniform (gi) not required to start</li>
+          <li>ISKF membership and grading fees are separate</li>
+        </ul>
+        <a class="btn btn-primary" href="/register">Join now</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2>Who our classes are for</h2>
+      <p class="prose">Everyone trains in the same class. Instructors pair students by size and level, and give younger students shorter, game-based drills.</p>
+      <div class="grid">
+        {AGE_GUIDE.map((a) => (
+          <div class="card">
+            <h3>{a.group}</h3>
+            <p class="muted">{a.ages}</p>
+            <p>{a.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap prose">
+      <h2>What a class looks like</h2>
+      <p>Each 90-minute class follows the traditional Shotokan structure:</p>
+      <ol>
+        <li><strong>Warm-up</strong> and stretching</li>
+        <li><strong>Kihon</strong>: basic punches, blocks, kicks and stances</li>
+        <li><strong>Kata</strong>: set forms that link techniques together</li>
+        <li><strong>Kumite</strong>: controlled partner work and sparring, at each student's level</li>
+        <li><strong>Bow out</strong> and announcements</li>
+      </ol>
+      <h2>Belt ranks</h2>
+      <p>Students progress through coloured-belt (kyu) ranks toward black belt (dan). Gradings follow ISKF standards and are held when students are ready, so there is no pressure to rush.</p>
+    </div>
+  </section>
+
+  <JoinCallout />
+</Base>

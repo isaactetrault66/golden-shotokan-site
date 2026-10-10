@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+
+// TODO: real instructors from the club (name, rank, years, bio, photo).
+const instructors = [
+  { name: 'Head Instructor (name to come)', rank: 'ISKF dan rank', bio: 'Bio to come: years training, lineage, teaching experience, certifications such as first aid and criminal record check.' },
+  { name: 'Assistant Instructor (name to come)', rank: 'ISKF rank', bio: 'Bio to come.' },
+];
+---
+<Base
+  title="Karate Instructors in Golden, BC"
+  description="Meet the ISKF-ranked Shotokan karate instructors at Golden Shotokan Karate Association in Golden, BC."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Our instructors</h1>
+      <p>Experienced ISKF-ranked instructors who teach traditional Shotokan karate in Golden.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap grid">
+      {instructors.map((i) => (
+        <article class="card">
+          <div class="photo-placeholder" style="margin-bottom:16px">Instructor photo</div>
+          <h2 style="font-size:1.4rem">{i.name}</h2>
+          <p class="muted">{i.rank}</p>
+          <p>{i.bio}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="section section-alt">
+    <div class="wrap prose">
+      <h2>Safe for kids</h2>
+      <p>Instructors who teach children hold current criminal record checks and first aid certification. Parents are always welcome to watch class.</p>
+    </div>
+  </section>
+  <JoinCallout />
+</Base>

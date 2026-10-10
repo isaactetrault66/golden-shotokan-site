@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
+const mapQuery = encodeURIComponent(`${SITE.name}, ${SITE.city}, ${SITE.region}`);
+---
+<Base
+  title="Contact and Directions: Karate in Golden, BC"
+  description={`Find Golden Shotokan Karate Association in Golden, BC. Address, phone, email, class times, directions and parking.`}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Contact us</h1>
+      <p>Questions about classes in Golden? Call, email, or come by before a class.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <h2>{SITE.name}</h2>
+        <address style="font-style:normal">
+          {SITE.street}<br />{SITE.city}, {SITE.region} {SITE.postalCode}<br /><br />
+          Phone: <a href={`tel:${SITE.phone.replace(/[^\d+]/g, '')}`}>{SITE.phone}</a><br />
+          Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        </address>
+        <h3 style="margin-top:24px">Class times</h3>
+        <ul>{DEFAULT_SCHEDULE.map((c) => <li>{c.day}, {fmtRange(c.start, c.end)}</li>)}</ul>
+        <h3>Parking and getting here</h3>
+        <p>Parking and entrance details to come.</p>
+        <p><a class="btn btn-primary" href="/register">Join now</a></p>
+      </div>
+      <div>
+        <iframe
+          title="Map to Golden Shotokan Karate Association"
+          src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+          width="100%" height="380" style="border:0;border-radius:10px" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+</Base>

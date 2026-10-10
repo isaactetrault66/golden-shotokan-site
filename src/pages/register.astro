@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import { TURNSTILE_SITE_KEY, SITE } from '../config.js';
+---
+<Base
+  title="Register for Karate Classes in Golden, BC"
+  description="Register online for Shotokan karate classes in Golden, BC. Kids, teens, adults and families welcome. Classes Monday and Wednesday, 6:00 to 7:30 pm."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Register</h1>
+      <p>Fill in this form to join. We'll email you to confirm your first class. It takes about 3 minutes.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap" style="max-width:760px">
+      <form class="stack" id="register-form" method="post" action="/api/register" novalidate>
+        <p class="required-note">Fields marked * are required.</p>
+
+        <fieldset>
+          <legend>Student</legend>
+          <div class="row-2">
+            <label>First name *<input name="student_first" required autocomplete="given-name" maxlength="80" /></label>
+            <label>Last name *<input name="student_last" required autocomplete="family-name" maxlength="80" /></label>
+          </div>
+          <div class="row-2">
+            <label>Date of birth *<input type="date" name="dob" required /></label>
+            <label>Group
+              <select name="program">
+                <option value="Kids">Kids</option>
+                <option value="Teens">Teens</option>
+                <option value="Adults">Adults</option>
+                <option value="Family">Family (more than one person)</option>
+              </select>
+            </label>
+          </div>
+          <label>Previous martial arts experience <span class="hint">Style and rank, or "none"</span>
+            <input name="experience" maxlength="200" />
+          </label>
+          <label>Additional family members joining <span class="hint">Names and ages, if registering more than one person</span>
+            <textarea name="family_members" rows="2" maxlength="500"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset id="guardian">
+          <legend>Parent or guardian <span class="hint" data-guardian-hint>(required for students under 18)</span></legend>
+          <label>Full name<input name="guardian_name" autocomplete="name" maxlength="120" /></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Contact</legend>
+          <div class="row-2">
+            <label>Email *<input type="email" name="email" required autocomplete="email" maxlength="200" /></label>
+            <label>Phone *<input type="tel" name="phone" required autocomplete="tel" maxlength="40" /></label>
+          </div>
+          <label>Town <span class="hint">e.g. Golden</span><input name="city" autocomplete="address-level2" maxlength="80" value="Golden" /></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Getting started</legend>
+          <div class="row-2">
+            <label>Preferred start date<input type="date" name="start_date" /></label>
+            <label>Preferred class
+              <select name="preferred_class">
+                <option>Monday</option>
+                <option>Wednesday</option>
+                <option selected>Both</option>
+              </select>
+            </label>
+          </div>
+          <label>How did you hear about us?
+            <select name="referral">
+              <option value="">Choose one</option>
+              <option>Google search</option>
+              <option>Google Maps</option>
+              <option>Friend or family</option>
+              <option>Facebook or Instagram</option>
+              <option>School or community event</option>
+              <option>Poster or flyer</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Health and emergency</legend>
+          <label>Medical conditions or injuries we should know about <span class="hint">Optional. Used only for safety in class.</span>
+            <textarea name="medical" rows="3" maxlength="1000"></textarea>
+          </label>
+          <div class="row-2">
+            <label>Emergency contact name *<input name="emergency_name" required maxlength="120" /></label>
+            <label>Emergency contact phone *<input type="tel" name="emergency_phone" required maxlength="40" /></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Consent</legend>
+          <label class="check"><input type="checkbox" name="waiver" value="yes" required />
+            <span>I have read and agree to the <a href="/waiver" target="_blank">liability waiver</a>, on behalf of the student if they are under 18. *</span>
+          </label>
+          <label class="check"><input type="checkbox" name="photo_consent" value="yes" />
+            <span>The club may use photos of the student on its website and social media.</span>
+          </label>
+          <p class="muted" style="margin:0">We collect this information to register the student, keep them safe in class and contact you. See our <a href="/privacy">privacy policy</a>.</p>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true">
+          <label>Leave this empty<input name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>}
+
+        <div class="form-msg" id="form-msg" role="alert"></div>
+        <div><button class="btn btn-primary" type="submit" id="submit-btn">Submit registration</button></div>
+        <p class="muted">Problems with the form? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+      </form>
+    </div>
+  </section>
+  {TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  <script>
+    const form = document.getElementById('register-form') as HTMLFormElement;
+    const msg = document.getElementById('form-msg')!;
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const dob = form.elements.namedItem('dob') as HTMLInputElement;
+    const guardian = form.elements.namedItem('guardian_name') as HTMLInputElement;
+
+    const isMinor = () => {
+      if (!dob.value) return false;
+      const d = new Date(dob.value + 'T00:00:00');
+      const now = new Date();
+      let age = now.getFullYear() - d.getFullYear();
+      if (now < new Date(now.getFullYear(), d.getMonth(), d.getDate())) age--;
+      return age < 18;
+    };
+    dob.addEventListener('change', () => { guardian.required = isMinor(); });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'form-msg';
+      guardian.required = isMinor();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+        window.location.href = '/register/thanks';
+      } catch (err) {
+        msg.textContent = (err as Error).message;
+        msg.className = 'form-msg error';
+        btn.disabled = false;
+        btn.textContent = 'Submit registration';
+      }
+    });
+  </script>
+</Base>

@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Schedule from '../components/Schedule.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+import { SITE, PRICING, AGE_GUIDE } from '../config.js';
+---
+<Base
+  title="Shotokan Karate Classes in Golden, BC | Golden Shotokan Karate Association"
+  description="Traditional ISKF Shotokan karate in Golden, BC for kids, teens and adults. Classes Monday and Wednesday evenings. Affordable, beginner friendly. Register online."
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Golden, British Columbia</p>
+      <h1>Shotokan Karate in Golden, BC</h1>
+      <p class="lead">Traditional ISKF karate for kids, teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/register">Join now</a>
+        <a class="btn btn-ghost" href="/first-class">What to expect</a>
+      </div>
+      <ul class="hero-facts">
+        <li><strong>Mon and Wed</strong> 6:00 to 7:30 pm</li>
+        <li><strong>All ages</strong> from kids to adults</li>
+        <li><strong>ISKF</strong> member club</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Karate for every age in Golden</h2>
+      <p class="prose">Our classes are mixed-age, so kids, teens, adults and whole families train together on the same nights. Everyone follows the same belt path, and instructors adjust each drill to the student.</p>
+      <div class="grid">
+        {AGE_GUIDE.slice(0, 3).map((a) => (
+          <div class="card">
+            <h3>{a.group} <span class="muted">({a.ages})</span></h3>
+            <p>{a.text}</p>
+          </div>
+        ))}
+      </div>
+      <p style="margin-top:20px"><a href="/classes">See classes and pricing →</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap two-col">
+      <div>
+        <h2>Class times</h2>
+        <Schedule />
+      </div>
+      <div>
+        <h2>Simple, affordable pricing</h2>
+        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
+        <p>{PRICING.note}</p>
+        <a class="btn btn-primary" href="/register">Register online</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div class="photo-placeholder">Photo: students training at the dojo (to be supplied by the club)</div>
+      <div>
+        <h2>Why train with us</h2>
+        <ul>
+          <li><strong>Traditional Shotokan.</strong> We teach the karate of the {SITE.affiliation}, with ISKF ranks and gradings.</li>
+          <li><strong>A community club.</strong> A local Golden dojo where students and families get to know each other.</li>
+          <li><strong>Beginner friendly.</strong> No martial arts experience or fitness level needed to start.</li>
+          <li><strong>Affordable.</strong> Low monthly dues and no long contracts.</li>
+        </ul>
+        <a href="/about">About our club →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2>Find us in Golden</h2>
+      <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.postalCode}</p>
+      <p><a href="/contact">Directions, parking and contact details →</a></p>
+    </div>
+  </section>
+
+  <JoinCallout />
+</Base>

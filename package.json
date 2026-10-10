@@ -1,0 +1,22 @@
+{
+  "name": "golden-shotokan-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler pages dev dist",
+    "db:init": "wrangler d1 execute golden-shotokan --file=db/schema.sql",
+    "db:init:local": "wrangler d1 execute golden-shotokan --local --file=db/schema.sql",
+    "test": "node --test tests/"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261010.1",
+    "wrangler": "^4.149.0"
+  }
+}
