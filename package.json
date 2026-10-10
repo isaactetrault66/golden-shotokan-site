@@ -9,7 +9,7 @@
     "preview": "wrangler pages dev dist",
     "db:init": "wrangler d1 execute golden-shotokan --file=db/schema.sql",
     "db:init:local": "wrangler d1 execute golden-shotokan --local --file=db/schema.sql",
-    "test": "node --test tests/"
+    "test": "node --test tests/*.test.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

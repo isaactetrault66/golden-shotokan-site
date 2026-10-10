@@ -11,7 +11,7 @@ import '../styles/global.css';
   <meta name="robots" content="noindex, nofollow" />
   <title>Admin | Golden Shotokan</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <style>
+  <style is:global>
     body { background: #f4f1ec; }
     .bar { background: var(--ink); color: #fff; }
     .bar .wrap { display: flex; justify-content: space-between; align-items: center; min-height: 56px; gap: 12px; flex-wrap: wrap; }
@@ -25,6 +25,7 @@ import '../styles/global.css';
     .count[aria-pressed="true"] { border-color: var(--red); outline: 1px solid var(--red); }
     .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
     .filters input, .filters select { width: auto; flex: 1 1 180px; }
+    .filters .btn { align-self: center; }
     .table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
     table.list { width: 100%; border-collapse: collapse; font-size: .95rem; }
     table.list th, table.list td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
