@@ -49,8 +49,8 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
           ...(e.end_time ? { endDate: `${e.date}T${e.end_time}` } : {}),
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           eventStatus: 'https://schema.org/EventScheduled',
-          location: { '@type': 'Place', name: e.location || 'Golden Dojo', address: 'Golden, BC' },
-          organizer: { '@type': 'Organization', name: 'Golden Dojo' },
+          location: { '@type': 'Place', name: e.location || 'Golden Shotokan Karate Society', address: 'Golden, BC' },
+          organizer: { '@type': 'Organization', name: 'Golden Shotokan Karate Society' },
           ...(e.description ? { description: e.description } : {}),
         }));
         if (ld.length && showEmpty) {

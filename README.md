@@ -1,6 +1,6 @@
-# Golden Dojo website
+# Golden Shotokan Karate Society website
 
-Website for the Golden Dojo, an ISKF club in Golden, BC.
+Website for the Golden Shotokan Karate Society, an ISKF club in Golden, BC.
 Fast static pages for local SEO, an online registration form, and a private
 admin area where the club sees and manages every registration.
 
@@ -25,7 +25,7 @@ Repeat submissions are limited to 5 an hour per device; only a salted hash of th
 
 Search the code for `TODO`. Most live in **`src/config.js`**:
 
-- [x] Street address, postal code, phone, email (from the Golden Dojo Facebook page)
+- [x] Street address, postal code, phone, email (from the club Facebook page)
 - [ ] Exact map pin for the dojo (`SITE.geo`)
 - [ ] Domain name (`SITE.url`, also in `astro.config.mjs` via config, `public/robots.txt`, `wrangler.toml`)
 - [x] Term prices for 13 to 17 and 18+ (`PRICING`)
@@ -35,7 +35,7 @@ Search the code for `TODO`. Most live in **`src/config.js`**:
 - [x] Entrance: east side door of the Golden Child Daycare building
 - [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
 - [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
-- [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the Golden Dojo page.
+- [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the club page.
 - [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching under-18 students hold criminal record checks and first aid
 
 ## Run it locally
@@ -67,7 +67,7 @@ npx wrangler pages dev dist               # http://localhost:8788, admin at /adm
    | --- | --- |
    | `RESEND_API_KEY` | from Resend |
    | `CLUB_EMAIL` | address(es) that receive new registrations, comma separated |
-   | `FROM_EMAIL` | e.g. `Golden Dojo <register@iskfgolden.ca>` (domain verified in Resend) |
+   | `FROM_EMAIL` | e.g. `Golden Shotokan Karate Society <register@iskfgolden.ca>` (domain verified in Resend) |
    | `SITE_URL` | `https://iskfgolden.ca` |
    | `TURNSTILE_SECRET` | from Turnstile |
    | `ACCESS_TEAM_DOMAIN` | e.g. `iskfgolden.cloudflareaccess.com` |
