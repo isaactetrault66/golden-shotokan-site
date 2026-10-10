@@ -1,6 +1,6 @@
-# Golden Shotokan Karate Association website
+# Golden Dojo website
 
-Website for the Golden Shotokan Karate Association, an ISKF club in Golden, BC.
+Website for the Golden Dojo, an ISKF club in Golden, BC.
 Fast static pages for local SEO, an online registration form, and a private
 admin area where the club sees and manages every registration.
 
@@ -67,7 +67,7 @@ npx wrangler pages dev dist               # http://localhost:8788, admin at /adm
    | --- | --- |
    | `RESEND_API_KEY` | from Resend |
    | `CLUB_EMAIL` | address(es) that receive new registrations, comma separated |
-   | `FROM_EMAIL` | e.g. `Golden Shotokan <register@iskfgolden.ca>` (domain verified in Resend) |
+   | `FROM_EMAIL` | e.g. `Golden Dojo <register@iskfgolden.ca>` (domain verified in Resend) |
    | `SITE_URL` | `https://iskfgolden.ca` |
    | `TURNSTILE_SECRET` | from Turnstile |
    | `ACCESS_TEAM_DOMAIN` | e.g. `iskfgolden.cloudflareaccess.com` |

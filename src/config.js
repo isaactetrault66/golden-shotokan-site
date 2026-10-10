@@ -4,8 +4,8 @@
 export { MIN_AGE } from '../lib/registration.js';
 
 export const SITE = {
-  name: 'Golden Shotokan Karate Association',
-  shortName: 'Golden Shotokan',
+  name: 'Golden Dojo',
+  shortName: 'Golden Dojo',
   url: 'https://iskfgolden.ca', // matches the club email domain
   city: 'Golden',
   region: 'BC',
