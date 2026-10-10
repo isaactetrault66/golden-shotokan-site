@@ -3,7 +3,8 @@ import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
 import '../styles/global.css';
 
 const { title, description, schema = [], noindex = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+const canonical = new URL(cleanPath, SITE.url).href;
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 const dayCode = { Monday: 'Mo', Tuesday: 'Tu', Wednesday: 'We', Thursday: 'Th', Friday: 'Fr', Saturday: 'Sa', Sunday: 'Su' };
 
@@ -40,7 +41,7 @@ const nav = [
   ['/faq', 'FAQ'],
   ['/contact', 'Contact'],
 ];
-const path = Astro.url.pathname.replace(/\.html$/, '');
+const path = cleanPath;
 ---
 <!doctype html>
 <html lang="en-CA">
