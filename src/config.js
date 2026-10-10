@@ -6,16 +6,17 @@ export { MIN_AGE } from '../lib/registration.js';
 export const SITE = {
   name: 'Golden Shotokan Karate Association',
   shortName: 'Golden Shotokan',
-  url: 'https://goldenshotokan.ca', // TODO: confirm domain
+  url: 'https://iskfgolden.ca', // matches the club email domain
   city: 'Golden',
   region: 'BC',
   regionLong: 'British Columbia',
   country: 'CA',
-  street: 'TODO: street address', // TODO
-  postalCode: 'V0A 1H0', // TODO: confirm
-  phone: 'TODO: phone', // TODO
-  email: 'TODO@goldenshotokan.ca', // TODO
-  geo: { lat: 51.2985, lng: -116.9631 }, // TODO: set to the dojo's exact location
+  street: '818 9th Street North',
+  postalCode: 'V0A 1H1',
+  phone: '(250) 439-8036',
+  email: 'info@iskfgolden.ca',
+  entrance: 'East side door of the Golden Child Daycare building',
+  geo: { lat: 51.2985, lng: -116.9631 }, // TODO: exact dojo pin (currently central Golden)
   affiliation: 'ISKF (International Shotokan Karate Federation)',
   googleReviewUrl: '', // TODO: from the Google Business Profile
   facebook: 'https://www.facebook.com/p/Golden-Dojo-100054606752200/', // "Golden Dojo" page
@@ -29,11 +30,18 @@ export const DEFAULT_SCHEDULE = [
   { day: 'Wednesday', start: '18:00', end: '19:30', name: 'Karate class, all ages' },
 ];
 
-// TODO: real monthly price. Shown openly because affordability is the pitch.
+// Fees are per term and include uniform, insurance and training.
+// TODO: confirm the 10 to 12 price (the Facebook post lists 13+ only).
 export const PRICING = {
-  monthly: 'TODO',
-  note: 'One of the most affordable activities in Golden. No contracts.',
-};
+  term: 'September to the end of January',
+  includes: 'Uniform, insurance and all training',
+  rates: [
+    { group: 'Kids (10 to 12)', price: 'Ask us' },
+    { group: 'Teens (13 to 17)', price: '$495' },
+    { group: 'Adults (18+)', price: '$570' },
+  ],
+  note: 'One of the most affordable activities in Golden.',
+}
 
 
 // "18:00", "19:30" -> "6:00 to 7:30 pm"

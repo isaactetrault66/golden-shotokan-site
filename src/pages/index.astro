@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import EventsList from '../components/EventsList.astro';
+import Prices from '../components/Prices.astro';
 import { SITE, PRICING, AGE_GUIDE } from '../config.js';
 ---
 <Base
@@ -50,8 +51,8 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
       </div>
       <div>
         <h2>Simple, affordable pricing</h2>
-        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
-        <p>{PRICING.note}</p>
+        <p>{PRICING.note} Your uniform and insurance are included.</p>
+        <Prices />
         <a class="btn btn-primary" href="/register">Register online</a>
       </div>
     </div>
@@ -59,14 +60,14 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
 
   <section class="section">
     <div class="wrap two-col">
-      <div class="photo-placeholder">Photo: students training at the dojo (to be supplied by the club)</div>
+      <img src="/images/team.jpg" alt="Golden Shotokan karate students and instructors with their medals at the dojo in Golden, BC" width="1350" height="734" loading="lazy" style="border-radius:10px" />
       <div>
         <h2>Why train with us</h2>
         <ul>
           <li><strong>Traditional Shotokan.</strong> We teach the karate of the {SITE.affiliation}, with ISKF ranks and gradings.</li>
           <li><strong>A community club.</strong> A local Golden dojo where students and families get to know each other.</li>
           <li><strong>Beginner friendly.</strong> No martial arts experience or fitness level needed to start.</li>
-          <li><strong>Affordable.</strong> Low monthly dues and no long contracts.</li>
+          <li><strong>Affordable.</strong> One fee per term covers your uniform, insurance and training.</li>
         </ul>
         <a href="/about">About our club →</a>
       </div>
@@ -83,6 +84,7 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
     <div class="wrap">
       <h2>Find us in Golden</h2>
       <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.postalCode}</p>
+      <p>Enter by the {SITE.entrance.charAt(0).toLowerCase() + SITE.entrance.slice(1)}.</p>
       <p><a href="/contact">Directions, parking and contact details →</a></p>
     </div>
   </section>

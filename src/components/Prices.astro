@@ -1,0 +1,10 @@
+---
+import { PRICING } from '../config.js';
+---
+<table class="schedule prices">
+  <thead><tr><th>Age group</th><th>Per term</th></tr></thead>
+  <tbody>
+    {PRICING.rates.map((r) => <tr><td>{r.group}</td><td><strong>{r.price}</strong></td></tr>)}
+  </tbody>
+</table>
+<p class="muted" style="margin-top:12px">One term runs {PRICING.term}. Includes {PRICING.includes.toLowerCase()}.</p>

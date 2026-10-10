@@ -6,11 +6,11 @@ import { PRICING } from '../config.js';
 const faqs = [
   ['Do I need any experience?', 'No. Most people start karate as complete beginners. Instructors teach every technique from the ground up.'],
   ['How old do you have to be?', 'Students start at age 10. Classes are mixed-age, so kids 10 and up, teens and adults all train together. There is no upper age limit.'],
-  ['How much does it cost?', `Monthly dues are ${PRICING.monthly}. ${PRICING.note} ISKF membership and grading fees are separate.`],
-  ['Do I have to sign a contract?', 'No. There are no long-term contracts.'],
+  ['How much does it cost?', `Fees are per term (${PRICING.term}): ${PRICING.rates.filter((r) => r.price.startsWith('$')).map((r) => `${r.group} ${r.price}`).join(', ')}. ${PRICING.note}`],
+  ['What does the fee include?', `${PRICING.includes}. There is nothing extra to buy to get started.`],
   ['When are classes?', 'Monday and Wednesday, 6:00 to 7:30 pm. See the classes page for any holiday closures.'],
   ['How often should I train?', 'Coming to both weekly classes gives the fastest progress, but once a week is fine to start.'],
-  ['What should I wear to my first class?', 'Comfortable athletic clothes. We train barefoot. You can buy a karate uniform (gi) later.'],
+  ['What should I wear to my first class?', 'Comfortable athletic clothes for your first class. We train barefoot. Your karate uniform (gi) is included in your fee.'],
   ['Is karate safe for kids?', 'Yes. Partner work is controlled, matched by size and level, and closely supervised. Parents are welcome to watch.'],
   ['Can adults start at 40 or older?', 'Absolutely. Many adults start later in life and train at their own pace.'],
   ['How is Shotokan different from other styles?', 'Shotokan emphasises strong stances, long-range linear techniques and kata. It is one of the most widely practised traditional styles in the world.'],
@@ -25,7 +25,7 @@ const faqSchema = {
 ---
 <Base
   title="Karate FAQ: Golden, BC"
-  description="Answers to common questions about Shotokan karate classes in Golden, BC: cost, ages, what to wear, contracts, safety and more."
+  description="Answers to common questions about Shotokan karate classes in Golden, BC: cost, ages, what to wear, safety and more."
   schema={[faqSchema]}
 >
   <section class="page-head">

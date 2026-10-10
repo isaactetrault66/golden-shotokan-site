@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /admin
 Disallow: /api/
-Sitemap: https://goldenshotokan.ca/sitemap-index.xml
+Sitemap: https://iskfgolden.ca/sitemap-index.xml

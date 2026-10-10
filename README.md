@@ -25,17 +25,19 @@ Repeat submissions are limited to 5 an hour per device; only a salted hash of th
 
 Search the code for `TODO`. Most live in **`src/config.js`**:
 
-- [ ] Street address, postal code, phone, email, map location (`geo`)
+- [x] Street address, postal code, phone, email (from the Golden Dojo Facebook page)
+- [ ] Exact map pin for the dojo (`SITE.geo`)
 - [ ] Domain name (`SITE.url`, also in `astro.config.mjs` via config, `public/robots.txt`, `wrangler.toml`)
-- [ ] Monthly price (`PRICING.monthly`)
+- [x] Term prices for 13 to 17 and 18+ (`PRICING`)
+- [ ] Price for ages 10 to 12
 - [x] Minimum age 10 (`MIN_AGE` in `lib/registration.js`)
 - [ ] Instructor bio and photo for Sensei Tyler Tetrault, plus any assistant instructors (`src/pages/instructors.astro`)
 - [ ] Club history (`src/pages/about.astro`)
-- [ ] Parking and entrance notes (`src/pages/contact.astro`)
+- [x] Entrance: east side door of the Golden Child Daycare building
 - [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
 - [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
 - [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the Golden Dojo page.
-- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; uniform not required to start; ISKF membership and grading fees are separate; no contracts; instructors teaching kids hold criminal record checks and first aid
+- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching kids hold criminal record checks and first aid
 
 ## Run it locally
 
@@ -66,21 +68,21 @@ npx wrangler pages dev dist               # http://localhost:8788, admin at /adm
    | --- | --- |
    | `RESEND_API_KEY` | from Resend |
    | `CLUB_EMAIL` | address(es) that receive new registrations, comma separated |
-   | `FROM_EMAIL` | e.g. `Golden Shotokan <register@goldenshotokan.ca>` (domain verified in Resend) |
-   | `SITE_URL` | `https://goldenshotokan.ca` |
+   | `FROM_EMAIL` | e.g. `Golden Shotokan <register@iskfgolden.ca>` (domain verified in Resend) |
+   | `SITE_URL` | `https://iskfgolden.ca` |
    | `TURNSTILE_SECRET` | from Turnstile |
-   | `ACCESS_TEAM_DOMAIN` | e.g. `goldenshotokan.cloudflareaccess.com` |
+   | `ACCESS_TEAM_DOMAIN` | e.g. `iskfgolden.cloudflareaccess.com` |
    | `ACCESS_AUD` | the Access application's Audience (AUD) tag |
 
 7. **Admin login (Cloudflare Access):** Zero Trust → Access → Applications → Add → Self-hosted.
    Domain: your site, paths `admin` and `api/admin`. Policy: Allow, emails of the 1 to 3 staff.
    Login method: One-time PIN. Copy the application's AUD tag into `ACCESS_AUD`.
    The admin API also verifies the Access token itself, so it stays closed even if the policy is misconfigured.
-8. **Custom domain:** Pages → Custom domains → add `goldenshotokan.ca`.
+8. **Custom domain:** Pages → Custom domains → add `iskfgolden.ca`.
 
 ## After launch (local SEO for Golden, BC)
 
-- Submit `https://goldenshotokan.ca/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
+- Submit `https://iskfgolden.ca/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
 - Claim the Google Business Profile: category "Karate school", same name, address and phone as `src/config.js`, hours Mon and Wed 6:00 to 7:30 pm, photos, website link.
 - List the club on Apple Maps, Bing Places, Yellow Pages Canada, Facebook, the Kicking Horse Country Chamber, Tourism Golden and the ISKF dojo directory, always with identical name, address and phone.
 - Ask current families for Google reviews.

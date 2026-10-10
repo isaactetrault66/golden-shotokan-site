@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import { PRICING, AGE_GUIDE, SITE } from '../config.js';
+import Prices from '../components/Prices.astro';
 
 const course = {
   '@context': 'https://schema.org',
@@ -14,7 +15,7 @@ const course = {
 ---
 <Base
   title="Karate Classes and Pricing in Golden, BC"
-  description="Kids, teen, adult and family karate classes in Golden, BC. Monday and Wednesday, 6:00 to 7:30 pm. See our age guide, belt ranks and affordable monthly pricing."
+  description="Kids, teen, adult and family karate classes in Golden, BC. Monday and Wednesday, 6:00 to 7:30 pm. See our age guide, belt ranks and affordable term pricing with uniform included."
   schema={[course]}
 >
   <section class="page-head">
@@ -33,12 +34,12 @@ const course = {
       </div>
       <div class="card">
         <h2>Pricing</h2>
-        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
         <p>{PRICING.note}</p>
+        <Prices />
         <ul>
           <li>Train at both weekly classes</li>
-          <li>Uniform (gi) not required to start</li>
-          <li>ISKF membership and grading fees are separate</li>
+          <li>Karate uniform (gi) included</li>
+          <li>Insurance included</li>
         </ul>
         <a class="btn btn-primary" href="/register">Join now</a>
       </div>
