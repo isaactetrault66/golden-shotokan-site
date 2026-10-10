@@ -22,6 +22,12 @@ test('minor needs a guardian', () => {
   assert.equal(validateRegistration({ ...base, dob: '2016-01-01', guardian_name: 'Ken Tanaka' }, today).ok, true);
 });
 
+test('students must be at least 10', () => {
+  const r = validateRegistration({ ...base, dob: '2017-06-01', guardian_name: 'Ken Tanaka' }, today);
+  assert.equal(r.ok, false);
+  assert.match(r.error, /10 or older/);
+});
+
 test('missing required fields and waiver are rejected', () => {
   assert.equal(validateRegistration({ ...base, email: '' }, today).ok, false);
   assert.equal(validateRegistration({ ...base, email: 'nope' }, today).ok, false);

@@ -28,13 +28,13 @@ Search the code for `TODO`. Most live in **`src/config.js`**:
 - [ ] Street address, postal code, phone, email, map location (`geo`)
 - [ ] Domain name (`SITE.url`, also in `astro.config.mjs` via config, `public/robots.txt`, `wrangler.toml`)
 - [ ] Monthly price (`PRICING.monthly`)
-- [ ] Age ranges in `AGE_GUIDE`
-- [ ] Instructors: names, ISKF ranks, bios, photos (`src/pages/instructors.astro`)
+- [x] Minimum age 10 (`MIN_AGE` in `lib/registration.js`)
+- [ ] Instructor bio and photo for Sensei Tyler Tetrault, plus any assistant instructors (`src/pages/instructors.astro`)
 - [ ] Club history (`src/pages/about.astro`)
 - [ ] Parking and entrance notes (`src/pages/contact.astro`)
 - [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
 - [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
-- [ ] Google review link, Facebook, Instagram (`SITE.googleReviewUrl` etc.)
+- [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the Golden Dojo page.
 - [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; uniform not required to start; ISKF membership and grading fees are separate; no contracts; instructors teaching kids hold criminal record checks and first aid
 
 ## Run it locally

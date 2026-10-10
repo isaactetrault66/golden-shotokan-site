@@ -2,29 +2,28 @@
 import Base from '../layouts/Base.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 
-// TODO: real instructors from the club (name, rank, years, bio, photo).
+// TODO: bio and photo for each instructor.
 const instructors = [
-  { name: 'Head Instructor (name to come)', rank: 'ISKF dan rank', bio: 'Bio to come: years training, lineage, teaching experience, certifications such as first aid and criminal record check.' },
-  { name: 'Assistant Instructor (name to come)', rank: 'ISKF rank', bio: 'Bio to come.' },
+  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: 'Sensei Tyler leads every Monday and Wednesday class. A longer bio is coming soon.' },
 ];
 ---
 <Base
   title="Karate Instructors in Golden, BC"
-  description="Meet the ISKF-ranked Shotokan karate instructors at Golden Shotokan Karate Association in Golden, BC."
+  description="Meet Sensei Tyler Tetrault, 4th degree black belt and head instructor of ISKF Shotokan karate classes in Golden, BC."
 >
   <section class="page-head">
     <div class="wrap">
       <h1>Our instructors</h1>
-      <p>Experienced ISKF-ranked instructors who teach traditional Shotokan karate in Golden.</p>
+      <p>Learn traditional Shotokan karate in Golden from an experienced ISKF black belt.</p>
     </div>
   </section>
   <section class="section">
     <div class="wrap grid">
       {instructors.map((i) => (
         <article class="card">
-          <div class="photo-placeholder" style="margin-bottom:16px">Instructor photo</div>
+          <div class="photo-placeholder" style="margin-bottom:16px">Photo of {i.name}</div>
           <h2 style="font-size:1.4rem">{i.name}</h2>
-          <p class="muted">{i.rank}</p>
+          <p class="muted">{i.role} · {i.rank}</p>
           <p>{i.bio}</p>
         </article>
       ))}

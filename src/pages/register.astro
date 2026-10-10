@@ -24,12 +24,12 @@ import { TURNSTILE_SITE_KEY, SITE } from '../config.js';
             <label>Last name *<input name="student_last" required autocomplete="family-name" maxlength="80" /></label>
           </div>
           <div class="row-2">
-            <label>Date of birth *<input type="date" name="dob" required /></label>
+            <label>Date of birth * <span class="hint">Students must be 10 or older</span><input type="date" name="dob" required /></label>
             <label>Group
               <select name="program">
-                <option value="Kids">Kids</option>
-                <option value="Teens">Teens</option>
-                <option value="Adults">Adults</option>
+                <option value="Kids">Kids (10 to 12)</option>
+                <option value="Teens">Teens (13 to 17)</option>
+                <option value="Adults">Adults (18+)</option>
                 <option value="Family">Family (more than one person)</option>
               </select>
             </label>

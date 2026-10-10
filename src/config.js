@@ -1,6 +1,8 @@
 // Club details used across every page, the footer and Google structured data.
 // Keep name, address and phone EXACTLY the same as the Google Business Profile.
 // Values marked TODO still need the real details from the club.
+export { MIN_AGE } from '../lib/registration.js';
+
 export const SITE = {
   name: 'Golden Shotokan Karate Association',
   shortName: 'Golden Shotokan',
@@ -16,7 +18,7 @@ export const SITE = {
   geo: { lat: 51.2985, lng: -116.9631 }, // TODO: set to the dojo's exact location
   affiliation: 'ISKF (International Shotokan Karate Federation)',
   googleReviewUrl: '', // TODO: from the Google Business Profile
-  facebook: '', // TODO
+  facebook: 'https://www.facebook.com/p/Golden-Dojo-100054606752200/', // "Golden Dojo" page
   instagram: '',
 };
 
@@ -45,13 +47,13 @@ export const fmtRange = (start, end) => {
   return a.pm === b.pm ? `${a.text} to ${b.text} ${ap(b.pm)}` : `${a.text} ${ap(a.pm)} to ${b.text} ${ap(b.pm)}`;
 };
 
-// TODO: confirm with the club. Classes are mixed-age; this guide explains who
-// each class suits. Split into separate programs later if classes split.
+// Classes are mixed-age, from age 10 up. This guide explains who each class
+// suits. Split into separate programs later if classes split.
 export const AGE_GUIDE = [
-  { group: 'Kids', ages: '6 to 12', text: 'Focus, confidence, respect and coordination. Kids train alongside older students and progress through the same belt ranks.' },
+  { group: 'Kids', ages: '10 to 12', text: 'Focus, confidence, respect and coordination. Kids train alongside older students and progress through the same belt ranks.' },
   { group: 'Teens', ages: '13 to 17', text: 'Fitness, self-defence and discipline, with a clear path toward black belt.' },
   { group: 'Adults', ages: '18 and up', text: 'Traditional technique, kata and sparring at your own pace. Many adults start with no experience, at any age.' },
-  { group: 'Families', ages: 'Parents and kids', text: 'Parents and children are welcome to train in the same class.' },
+  { group: 'Families', ages: 'Parents and kids 10+', text: 'Parents and children 10 and older are welcome to train in the same class.' },
 ];
 
 // Cloudflare Turnstile public site key (spam check). The secret key lives in
