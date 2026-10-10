@@ -9,6 +9,15 @@ const COLUMNS = [
   'emergency_name', 'emergency_phone', 'waiver', 'photo_consent',
 ];
 
+const MAX_PER_HOUR = 5;
+
+// Privacy-friendly: store a salted hash of the IP, never the IP itself.
+async function hashIp(ip, salt) {
+  const data = new TextEncoder().encode(`${salt}:${ip}`);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(digest)].slice(0, 16).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function turnstileOk(env, token, ip) {
   if (!env.TURNSTILE_SECRET) return true; // spam check off until configured
   if (!token) return false;
@@ -47,11 +56,21 @@ export async function onRequestPost({ request, env, waitUntil }) {
     return fail('The spam check failed. Please refresh the page and try again.');
   }
 
+  const ipHash = ip ? await hashIp(ip, env.IP_SALT || env.SITE_URL || 'golden-shotokan') : null;
+  if (ipHash) {
+    const recent = await env.DB.prepare(
+      "SELECT COUNT(*) AS n FROM registrations WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')"
+    ).bind(ipHash).first('n');
+    if (recent >= MAX_PER_HOUR) {
+      return fail('Too many registrations from this device in the last hour. Please email us instead.', 429);
+    }
+  }
+
   const r = result.data;
   const row = await env.DB.prepare(
-    `INSERT INTO registrations (${COLUMNS.join(', ')}) VALUES (${COLUMNS.map(() => '?').join(', ')}) RETURNING id`
+    `INSERT INTO registrations (${COLUMNS.join(', ')}, ip_hash) VALUES (${COLUMNS.map(() => '?').join(', ')}, ?) RETURNING id`
   )
-    .bind(...COLUMNS.map((c) => r[c]))
+    .bind(...COLUMNS.map((c) => r[c]), ipHash)
     .first();
   const id = row.id;
 

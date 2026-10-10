@@ -23,10 +23,12 @@ CREATE TABLE IF NOT EXISTS registrations (
   waiver INTEGER NOT NULL DEFAULT 0,
   photo_consent INTEGER NOT NULL DEFAULT 0,
   notes TEXT,
-  email_status TEXT
+  email_status TEXT,
+  ip_hash TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_registrations_created ON registrations (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_registrations_status ON registrations (status);
+CREATE INDEX IF NOT EXISTS idx_registrations_ip ON registrations (ip_hash, created_at);
 
 CREATE TABLE IF NOT EXISTS schedule (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,6 +38,20 @@ CREATE TABLE IF NOT EXISTS schedule (
   end TEXT NOT NULL,
   name TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  title TEXT NOT NULL,
+  kind TEXT NOT NULL DEFAULT 'Club event',
+  date TEXT NOT NULL,
+  start_time TEXT,
+  end_time TEXT,
+  location TEXT,
+  description TEXT,
+  published INTEGER NOT NULL DEFAULT 1
+);
+CREATE INDEX IF NOT EXISTS idx_events_date ON events (date);
 
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,

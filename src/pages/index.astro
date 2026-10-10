@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
+import EventsList from '../components/EventsList.astro';
 import { SITE, PRICING, AGE_GUIDE } from '../config.js';
 ---
 <Base
@@ -69,6 +70,12 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
         </ul>
         <a href="/about">About our club →</a>
       </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" data-events-section hidden>
+    <div class="wrap">
+      <EventsList limit={3} showEmpty={false} heading="Coming up" />
     </div>
   </section>
 

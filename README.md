@@ -17,7 +17,9 @@ admin area where the club sees and manages every registration.
 2. `functions/api/register.js` validates it (`lib/registration.js`) and saves it to D1 **first**.
 3. It then emails the club (`CLUB_EMAIL`) and the family. Email success or failure is recorded on the row, so a failed email never loses a registration.
 4. Staff open `/admin` to see it, change its status (New, Contacted, First class done, Enrolled, Not continuing), add notes, search, filter, export to CSV, or delete it (privacy requests).
-5. Staff can also edit class times and a schedule notice under **Class schedule**. The public pages show the edited schedule.
+5. Staff can also edit class times and a schedule notice under **Class schedule**, and add gradings, seminars, tournaments, club events and holiday closures under **Events**. The public pages show them within about 5 minutes.
+
+Repeat submissions are limited to 5 an hour per device; only a salted hash of the IP address is stored.
 
 ## Content still needed from the club
 
@@ -31,7 +33,7 @@ Search the code for `TODO`. Most live in **`src/config.js`**:
 - [ ] Club history (`src/pages/about.astro`)
 - [ ] Parking and entrance notes (`src/pages/contact.astro`)
 - [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
-- [ ] 15 to 30 real photos to replace the striped photo placeholders, plus `public/og-image.jpg` (1200x630) for link previews
+- [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
 - [ ] Google review link, Facebook, Instagram (`SITE.googleReviewUrl` etc.)
 - [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; uniform not required to start; ISKF membership and grading fees are separate; no contracts; instructors teaching kids hold criminal record checks and first aid
 

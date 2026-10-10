@@ -60,6 +60,7 @@ import '../styles/global.css';
     <div class="tabs" role="tablist">
       <button role="tab" aria-selected="true" data-tab="regs">Registrations</button>
       <button role="tab" aria-selected="false" data-tab="sched">Class schedule</button>
+      <button role="tab" aria-selected="false" data-tab="events">Events</button>
     </div>
     <div class="form-msg" id="err" role="alert"></div>
 
@@ -91,6 +92,39 @@ import '../styles/global.css';
         <div class="actions"><button class="btn btn-primary" id="save-sched" type="button">Save schedule</button></div>
       </div>
     </section>
+    <section id="tab-events" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 id="ev-form-title">Add an event</h2>
+        <p class="muted">Gradings, seminars, tournaments, club events and holiday closures. Published events show on the Events page and the home page.</p>
+        <form id="ev-form" class="stack" style="gap:14px">
+          <div class="row-2">
+            <label>Title *<input name="title" required maxlength="120" placeholder="e.g. Fall kyu grading" /></label>
+            <label>Type<select name="kind"></select></label>
+          </div>
+          <div class="row-2">
+            <label>Date *<input type="date" name="date" required /></label>
+            <label>Location <span class="hint">Leave empty for the usual dojo</span><input name="location" maxlength="160" /></label>
+          </div>
+          <div class="row-2">
+            <label>Start time<input type="time" name="start_time" /></label>
+            <label>End time<input type="time" name="end_time" /></label>
+          </div>
+          <label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" id="ev-save">Add event</button>
+            <button class="btn btn-ghost btn-small" type="button" id="ev-cancel" hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Date</th><th>Event</th><th>Type</th><th>Shown</th><th></th></tr></thead>
+          <tbody id="ev-rows"></tbody>
+        </table>
+        <div class="empty" id="ev-empty" hidden>No events yet.</div>
+      </div>
+    </section>
   </main>
 
   <dialog id="dlg">
@@ -108,7 +142,7 @@ import '../styles/global.css';
   <div class="toast" id="toast"></div>
 
   <script>
-    import { STATUSES, DAYS, ageOn } from '../../lib/registration.js';
+    import { STATUSES, DAYS, EVENT_KINDS, ageOn } from '../../lib/registration.js';
 
     const $ = (id) => document.getElementById(id)!;
     const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
@@ -217,7 +251,9 @@ import '../styles/global.css';
       const tab = (b as HTMLElement).dataset.tab;
       $('tab-regs').hidden = tab !== 'regs';
       $('tab-sched').hidden = tab !== 'sched';
+      $('tab-events').hidden = tab !== 'events';
       if (tab === 'sched') loadSchedule();
+      if (tab === 'events') loadEvents();
     }));
 
     // Schedule editor
@@ -249,6 +285,53 @@ import '../styles/global.css';
       try {
         await api('/api/admin/schedule', { method: 'PUT', body: JSON.stringify({ classes, notice: ($('notice') as HTMLInputElement).value }) });
         toast('Schedule saved'); showErr('');
+      } catch (e) { showErr((e as Error).message); }
+    });
+
+    // Events editor
+    const evForm = $('ev-form') as HTMLFormElement;
+    (evForm.elements.namedItem('kind') as HTMLSelectElement).innerHTML = EVENT_KINDS.map((k) => `<option>${esc(k)}</option>`).join('');
+    let events: any[] = [];
+    let editingId: number | null = null;
+    function resetEventForm() {
+      evForm.reset();
+      editingId = null;
+      $('ev-form-title').textContent = 'Add an event';
+      $('ev-save').textContent = 'Add event';
+      $('ev-cancel').hidden = true;
+    }
+    async function loadEvents() {
+      try {
+        events = (await api('/api/admin/events')).events;
+        $('ev-empty').hidden = events.length > 0;
+        $('ev-rows').innerHTML = events.map((e) => `<tr data-id="${e.id}"><td>${esc(e.date)}</td><td><strong>${esc(e.title)}</strong></td><td>${esc(e.kind)}</td><td>${e.published ? 'Yes' : 'Hidden'}</td><td><button class="btn btn-ghost btn-small" data-edit="${e.id}" type="button">Edit</button> <button class="btn btn-danger btn-small" data-del="${e.id}" type="button">Delete</button></td></tr>`).join('');
+        $('ev-rows').querySelectorAll<HTMLElement>('[data-edit]').forEach((b) => b.addEventListener('click', () => {
+          const e = events.find((x) => x.id === Number(b.dataset.edit));
+          for (const k of ['title', 'kind', 'date', 'start_time', 'end_time', 'location', 'description']) (evForm.elements.namedItem(k) as HTMLInputElement).value = e[k] || '';
+          (evForm.elements.namedItem('published') as HTMLInputElement).checked = !!e.published;
+          editingId = e.id;
+          $('ev-form-title').textContent = 'Edit event';
+          $('ev-save').textContent = 'Save changes';
+          $('ev-cancel').hidden = false;
+          evForm.scrollIntoView({ behavior: 'smooth' });
+        }));
+        $('ev-rows').querySelectorAll<HTMLElement>('[data-del]').forEach((b) => b.addEventListener('click', async () => {
+          if (b.dataset.confirm !== 'yes') { b.dataset.confirm = 'yes'; b.textContent = 'Click again'; return; }
+          try { await api(`/api/admin/events/${b.dataset.del}`, { method: 'DELETE' }); toast('Event deleted'); loadEvents(); } catch (e) { showErr((e as Error).message); }
+        }));
+      } catch (e) { showErr((e as Error).message); }
+    }
+    $('ev-cancel').addEventListener('click', resetEventForm);
+    evForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (!evForm.checkValidity()) { evForm.reportValidity(); return; }
+      const fd = new FormData(evForm);
+      const body = { ...Object.fromEntries(fd), published: fd.get('published') === 'on' };
+      try {
+        if (editingId) await api(`/api/admin/events/${editingId}`, { method: 'PUT', body: JSON.stringify(body) });
+        else await api('/api/admin/events', { method: 'POST', body: JSON.stringify(body) });
+        toast(editingId ? 'Event saved' : 'Event added'); showErr('');
+        resetEventForm(); loadEvents();
       } catch (e) { showErr((e as Error).message); }
     });
 

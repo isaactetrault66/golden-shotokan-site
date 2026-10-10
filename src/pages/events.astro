@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import EventsList from '../components/EventsList.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+---
+<Base
+  title="Karate Events, Gradings and Seminars in Golden, BC"
+  description="Upcoming gradings, seminars, tournaments and club events at Golden Shotokan Karate Association in Golden, BC, plus holiday class closures."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Events</h1>
+      <p>Belt gradings, ISKF seminars, tournaments, club events and holiday closures.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <EventsList />
+    </div>
+  </section>
+  <JoinCallout />
+</Base>
