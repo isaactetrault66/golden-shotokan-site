@@ -26,9 +26,9 @@ export const SITE = {
 // Default class times. Shown in page HTML (for Google) and replaced at
 // runtime by the schedule edited in the admin area.
 export const DEFAULT_SCHEDULE = [
-  { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class (ages 13+)' },
-  { day: 'Wednesday', start: '18:00', end: '19:00', name: 'Karate class (ages 13+)' },
-  { day: 'Friday', start: '18:00', end: '19:00', name: 'Open training (no instruction)' },
+  { day: 'Monday', start: '18:00', end: '19:30', name: 'Karate class (ages 13+)' },
+  { day: 'Wednesday', start: '18:00', end: '19:30', name: 'Karate class (ages 13+)' },
+  { day: 'Friday', start: '18:00', end: '19:30', name: 'Open training (no instruction)' },
 ];
 
 // Fees are per term and include uniform, insurance and training.
@@ -43,7 +43,7 @@ export const PRICING = {
 }
 
 
-// "18:00", "19:00" -> "6:00 to 7:00 pm"
+// "18:00", "19:30" -> "6:00 to 7:30 pm"
 export const fmtRange = (start, end) => {
   const part = (t) => {
     const [h, m] = t.split(':').map(Number);
@@ -70,7 +70,7 @@ export const TURNSTILE_SITE_KEY = '';
 export const DOJO_KUN = [
   { en: 'Seek perfection of character', ja: '人格完成に努むること', romaji: 'Jinkaku kansei ni tsutomuru koto' },
   { en: 'Be faithful', ja: '誠の道を守ること', romaji: 'Makoto no michi o mamoru koto' },
-  { en: 'Endeavour to excel', ja: '努力の精神を養うこと', romaji: 'Doryoku no seishin o yashinau koto' },
+  { en: 'Endeavor', ja: '努力の精神を養うこと', romaji: 'Doryoku no seishin o yashinau koto' },
   { en: 'Respect others', ja: '礼儀を重んずること', romaji: 'Reigi o omonzuru koto' },
   { en: 'Refrain from violent behaviour', ja: '血気の勇を戒むること', romaji: 'Kekki no yu o imashimuru koto' },
 ];

@@ -85,6 +85,6 @@ npx wrangler pages dev dist               # http://localhost:8788, admin at /adm
 ## After launch (local SEO for Golden, BC)
 
 - Submit `https://iskfgolden.ca/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
-- Claim the Google Business Profile: category "Karate school", same name, address and phone as `src/config.js`, hours Mon, Wed and Fri 6:00 to 7:00 pm, photos, website link.
+- Claim the Google Business Profile: category "Karate school", same name, address and phone as `src/config.js`, hours Mon, Wed and Fri 6:00 to 7:30 pm, photos, website link.
 - List the club on Apple Maps, Bing Places, Yellow Pages Canada, Facebook, the Kicking Horse Country Chamber, Tourism Golden and the ISKF dojo directory, always with identical name, address and phone.
 - Ask current families for Google reviews.
