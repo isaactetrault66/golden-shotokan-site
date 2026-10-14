@@ -136,3 +136,24 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .event-kind { text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; font-weight: 700; color: var(--red); margin-bottom: .4em; }
 .event[data-kind="Closure"] .event-kind { color: var(--muted); }
 .event h3 { margin-bottom: .4em; }
+
+/* Shotokan page and dojo kun */
+.kun-list { padding-left: 1.4em; margin: 0; }
+.kun-list li { margin-bottom: 10px; }
+.kun-list span { display: block; color: var(--muted); font-size: .95rem; }
+.lineage { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); counter-reset: l; }
+.lineage li { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); padding: 20px; }
+.lineage li:last-child { border-top-color: var(--navy); }
+.lineage p { margin: 8px 0 0; }
+.lineage .muted { display: block; font-size: .9rem; }
+.table-scroll { overflow-x: auto; }
+.kata-list { margin: 0; }
+.kata-list dt { font-weight: 700; margin-top: 10px; }
+.kata-list dd { margin: 0; color: var(--muted); }
+.kun-strip { background: var(--red); color: #fff; padding: 18px 0; }
+.kun-strip ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px; }
+.kun-strip li { font-weight: 600; letter-spacing: .02em; }
+.kun-strip li span { font-weight: 400; opacity: .8; margin-right: 6px; }
+.explore a.card { display: block; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+.explore a.card:hover { border-color: var(--navy); transform: translateY(-2px); }
+.explore a.card p { color: var(--muted); margin: 0; }

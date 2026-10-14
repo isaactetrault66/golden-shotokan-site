@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+import { DOJO_KUN, AFFILIATIONS } from '../config.js';
+
+// ISKF kyu grades and the kata tested at each one. Belt colours vary between
+// dojos: TODO confirm with Sensei Tyler.
+const ranks = [
+  ['9th kyu', 'White', 'Heian Shodan'],
+  ['8th kyu', 'Yellow', 'Heian Nidan'],
+  ['7th kyu', 'Orange', 'Heian Sandan'],
+  ['6th kyu', 'Green', 'Heian Yondan'],
+  ['5th kyu', 'Purple', 'Heian Godan'],
+  ['4th kyu', 'Purple', 'Tekki Shodan'],
+  ['3rd kyu', 'Brown', 'Bassai Dai'],
+  ['2nd kyu', 'Brown', 'Bassai Dai'],
+  ['1st kyu', 'Brown', 'Bassai Dai, Kanku Dai, Jion or Empi'],
+  ['1st dan (Shodan)', 'Black', 'All of the above, plus a free-choice kata'],
+];
+
+const kata = [
+  ['Beginner', [['Heian Shodan to Godan', 'Peaceful mind. Five forms that build the basics.'], ['Tekki Shodan, Nidan, Sandan', 'Iron horse. Strong side-to-side stances.']]],
+  ['Brown and black belt', [['Bassai Dai and Sho', 'To storm a fortress'], ['Kanku Dai and Sho', 'Viewing the sky'], ['Empi', 'Flying swallow'], ['Jion', 'Named after a Buddhist temple'], ['Jitte', 'Ten hands'], ['Hangetsu', 'Half moon']]],
+  ['Advanced', [['Gankaku', 'Crane on a rock'], ['Chinte', 'Unusual hands'], ['Nijushiho', 'Twenty-four steps'], ['Sochin', 'Tranquil force'], ['Meikyo', 'Bright mirror'], ['Unsu', 'Hands like clouds'], ['Wankan', "King's crown"], ['Gojushiho Dai and Sho', 'Fifty-four steps'], ["Ji'in", 'Temple grounds']]],
+];
+
+const lineage = [
+  ['Gichin Funakoshi', '1868 to 1957', 'Brought karate from Okinawa to mainland Japan and founded Shotokan. The style is named after his pen name, Shoto.'],
+  ['Masatoshi Nakayama', '1913 to 1987', 'A student of Funakoshi and long-time chief instructor of the Japan Karate Association. He shaped modern Shotokan training and teaching.'],
+  ['Teruyuki Okazaki', '1931 to 2020', 'Trained under Funakoshi and Nakayama, brought Shotokan to North America and founded the ISKF in 1977.'],
+  ['Golden Shotokan Karate Society', 'Today', 'Sensei Tyler Tetrault, 4th degree black belt, teaches the ISKF syllabus in Golden, BC.'],
+];
+---
+<Base
+  title="Shotokan Karate: Lineage, Belt Ranks and Kata"
+  description="Learn about Shotokan karate at Golden Shotokan Karate Society in Golden, BC: the ISKF lineage, the dojo kun, the belt ranking system and the kata students learn."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Shotokan karate</h1>
+      <p>Where our karate comes from, what students learn, and how they progress from white belt to black belt.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div class="prose">
+        <h2 id="what-is-shotokan">What is Shotokan?</h2>
+        <p>Shotokan is one of the most widely practised styles of karate in the world. It is known for deep, stable stances, strong straight-line techniques, and kata practised with full focus and power.</p>
+        <p>Training has three parts that support each other: <strong>kihon</strong> (basics), <strong>kata</strong> (forms) and <strong>kumite</strong> (sparring). Students work on all three in every class.</p>
+      </div>
+      <div class="card">
+        <h2 id="dojo-kun" style="margin-top:0">The dojo kun</h2>
+        <p class="muted">Recited at the end of every class.</p>
+        <ol class="kun-list">
+          {DOJO_KUN.map((k) => <li><strong>{k.en}</strong><span lang="ja">{k.ja}</span></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2 id="lineage">Our lineage</h2>
+      <p class="prose">As an ISKF club, we teach a line of Shotokan that runs directly back to its founder.</p>
+      <ol class="lineage">
+        {lineage.map(([name, years, text]) => (
+          <li><div><strong>{name}</strong> <span class="muted">{years}</span></div><p>{text}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 id="ranks">Belt ranks</h2>
+      <p class="prose">Students move up through coloured-belt (kyu) grades toward black belt (dan). At each grading you show your basics, kata and sparring. You take each grading when your instructor says you're ready.</p>
+      <div class="table-scroll">
+        <table class="schedule">
+          <thead><tr><th>Grade</th><th>Belt</th><th>Kata</th></tr></thead>
+          <tbody>{ranks.map(([g, b, k]) => <tr><td>{g}</td><td>{b}</td><td>{k}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2 id="kata">The kata</h2>
+      <p class="prose">A kata is a set sequence of blocks, strikes and stances against imaginary opponents. Shotokan has 26 kata. Each name has a meaning:</p>
+      <div class="grid">
+        {kata.map(([level, list]) => (
+          <div class="card">
+            <h3>{level}</h3>
+            <dl class="kata-list">
+              {(list as string[][]).map(([n, m]) => <><dt>{n}</dt><dd>{m}</dd></>)}
+            </dl>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap prose">
+      <h2 id="affiliations">Affiliations</h2>
+      <p>Golden Shotokan Karate Society is a member club of:</p>
+      <ul>{AFFILIATIONS.map((a) => <li><a href={a.url} rel="noopener">{a.name}</a></li>)}</ul>
+    </div>
+  </section>
+
+  <JoinCallout />
+</Base>

@@ -65,3 +65,17 @@ export const AGE_GUIDE = [
 // Cloudflare Turnstile public site key (spam check). The secret key lives in
 // Cloudflare as TURNSTILE_SECRET. Leave empty to turn the check off locally.
 export const TURNSTILE_SITE_KEY = '';
+
+// The five principles recited at the end of every class.
+export const DOJO_KUN = [
+  { en: 'Seek perfection of character', ja: '人格完成に努むること', romaji: 'Jinkaku kansei ni tsutomuru koto' },
+  { en: 'Be faithful', ja: '誠の道を守ること', romaji: 'Makoto no michi o mamoru koto' },
+  { en: 'Endeavour to excel', ja: '努力の精神を養うこと', romaji: 'Doryoku no seishin o yashinau koto' },
+  { en: 'Respect others', ja: '礼儀を重んずること', romaji: 'Reigi o omonzuru koto' },
+  { en: 'Refrain from violent behaviour', ja: '血気の勇を戒むること', romaji: 'Kekki no yu o imashimuru koto' },
+];
+
+export const AFFILIATIONS = [
+  { name: 'ISKF (International Shotokan Karate Federation)', url: 'https://www.iskf.com' },
+  { name: 'ISKF Canada', url: 'https://www.iskfcanada.com' },
+];

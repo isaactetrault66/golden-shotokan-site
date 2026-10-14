@@ -4,7 +4,16 @@ import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import EventsList from '../components/EventsList.astro';
 import Prices from '../components/Prices.astro';
-import { SITE, PRICING, AGE_GUIDE } from '../config.js';
+import { SITE, PRICING, AGE_GUIDE, DOJO_KUN } from '../config.js';
+
+const explore = [
+  ['/shotokan#lineage', 'Our lineage', 'From Gichin Funakoshi to the ISKF and our club in Golden.'],
+  ['/shotokan#ranks', 'Belt ranks', 'The grades from white belt to black belt, and the kata for each.'],
+  ['/shotokan#kata', 'The kata', 'The 26 Shotokan kata and what their names mean.'],
+  ['/shotokan#dojo-kun', 'The dojo kun', 'The five principles we recite at the end of every class.'],
+  ['/instructors', 'Our instructors', 'Meet Sensei Tyler Tetrault, 4th degree black belt.'],
+  ['/events', 'Events', 'Gradings, seminars, tournaments and club events.'],
+];
 ---
 <Base
   title="Shotokan Karate Classes in Golden, BC | Golden Shotokan Karate Society"
@@ -28,6 +37,12 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
       </ul>
       </div>
       <img class="hero-logo" src="/images/logo.png" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" width="512" height="512" />
+    </div>
+  </section>
+
+  <section class="kun-strip" aria-label="The dojo kun">
+    <div class="wrap">
+      <ol>{DOJO_KUN.map((k, i) => <li><span>{i + 1}.</span>{k.en}</li>)}</ol>
     </div>
   </section>
 
@@ -78,13 +93,24 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
     </div>
   </section>
 
+  <section class="section section-alt explore">
+    <div class="wrap">
+      <h2>Explore the dojo</h2>
+      <div class="grid">
+        {explore.map(([href, title, text]) => (
+          <a class="card" href={href}><h3>{title} →</h3><p>{text}</p></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="section" style="padding-top:0" data-events-section hidden>
     <div class="wrap">
       <EventsList limit={3} showEmpty={false} heading="Coming up" />
     </div>
   </section>
 
-  <section class="section section-alt">
+  <section class="section">
     <div class="wrap">
       <h2>Find us in Golden</h2>
       <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.postalCode}</p>
