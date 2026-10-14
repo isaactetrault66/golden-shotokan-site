@@ -12,7 +12,7 @@ export const SITE = {
   regionLong: 'British Columbia',
   country: 'CA',
   street: '818 9th Street North',
-  postalCode: 'V0A 1H1',
+  postalCode: 'V0A 1H2',
   phone: '(250) 439-8036',
   email: 'info@iskfgolden.ca',
   entrance: 'East side door of the Golden Child Daycare building',
