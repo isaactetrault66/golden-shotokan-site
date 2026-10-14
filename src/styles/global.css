@@ -76,6 +76,12 @@ p { margin: 0 0 1em; }
 .hero-facts { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 36px; padding: 0; list-style: none; color: var(--hero-muted); }
 .hero-facts strong { color: var(--hero-fg); }
 .hero-inner { display: flex; align-items: center; gap: 48px; }
+/* Homepage hero video, tinted into the navy */
+.hero-video { position: relative; overflow: hidden; isolation: isolate; background: #1d2a6b; }
+.hero-video .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; mix-blend-mode: luminosity; opacity: .55; }
+.hero-video .hero-tint { position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(22,32,79,.92) 0%, rgba(29,42,107,.72) 50%, rgba(29,42,107,.35) 100%); }
+@media (max-width: 900px) { .hero-video .hero-tint { background: linear-gradient(180deg, rgba(22,32,79,.7), rgba(29,42,107,.8)); } }
+@media (prefers-reduced-motion: reduce) { .hero-video .hero-bg { display: none; } .hero-video { background: #1d2a6b url(/video/hero-poster.jpg) center / cover; } }
 .hero-logo { flex: none; width: 300px; height: 300px; }
 @media (max-width: 900px) { .hero-logo { display: none; } }
 .section { padding: 64px 0; }
