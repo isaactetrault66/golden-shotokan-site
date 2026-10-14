@@ -1,7 +1,7 @@
 // Club details used across every page, the footer and Google structured data.
 // Keep name, address and phone EXACTLY the same as the Google Business Profile.
 // Values marked TODO still need the real details from the club.
-export { MIN_AGE } from '../lib/registration.js';
+export { MIN_AGE } from '../lib/forms.js';
 
 export const SITE = {
   name: 'Golden Shotokan Karate Society',
@@ -26,8 +26,9 @@ export const SITE = {
 // Default class times. Shown in page HTML (for Google) and replaced at
 // runtime by the schedule edited in the admin area.
 export const DEFAULT_SCHEDULE = [
-  { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class, all ages' },
-  { day: 'Wednesday', start: '18:00', end: '19:00', name: 'Karate class, all ages' },
+  { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class (ages 13+)' },
+  { day: 'Wednesday', start: '18:00', end: '19:00', name: 'Karate class (ages 13+)' },
+  { day: 'Friday', start: '18:00', end: '19:00', name: 'Open training (no instruction)' },
 ];
 
 // Fees are per term and include uniform, insurance and training.

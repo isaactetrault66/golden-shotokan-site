@@ -12,7 +12,7 @@ import '../styles/global.css';
   <title>Admin | Golden Shotokan Karate Society</title>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <style is:global>
-    body { background: #f4f1ec; }
+    body { background: #f2f4fa; }
     .bar { background: var(--ink); color: #fff; }
     .bar .wrap { display: flex; justify-content: space-between; align-items: center; min-height: 56px; gap: 12px; flex-wrap: wrap; }
     .bar a { color: #fff; }
@@ -30,13 +30,13 @@ import '../styles/global.css';
     table.list { width: 100%; border-collapse: collapse; font-size: .95rem; }
     table.list th, table.list td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
     table.list tbody tr { cursor: pointer; }
-    table.list tbody tr:hover { background: #faf6f0; }
+    table.list tbody tr:hover { background: #f5f7fc; }
     .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600; background: #eee; }
     .pill[data-s="New"] { background: #fde2df; color: #8c1d17; }
-    .pill[data-s="Contacted"] { background: #fff1d6; color: #7a5200; }
-    .pill[data-s="First class done"] { background: #e2eefc; color: #1d4b8c; }
-    .pill[data-s="Enrolled"] { background: #dff3e4; color: #1d6b35; }
-    .pill[data-s="Not continuing"] { background: #eee; color: #555; }
+    .pill[data-s="Replied"] { background: #e2eefc; color: #1d4b8c; }
+    .pill[data-s="Joined"] { background: #dff3e4; color: #1d6b35; }
+    .pill[data-s="Closed"] { background: #eee; color: #555; }
+    td.msg { white-space: normal; max-width: 360px; color: var(--muted); }
     dialog { border: 0; border-radius: 12px; padding: 0; width: min(720px, 94vw); max-height: 90vh; }
     dialog::backdrop { background: rgba(0,0,0,.4); }
     .dlg-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; }
@@ -58,7 +58,7 @@ import '../styles/global.css';
   <div class="bar"><div class="wrap"><strong>Golden Shotokan Karate Society admin</strong><span><span id="who"></span> · <a href="/">View site</a> · <a href="/cdn-cgi/access/logout">Sign out</a></span></div></div>
   <main class="wrap" style="padding-bottom:60px">
     <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" data-tab="regs">Registrations</button>
+      <button role="tab" aria-selected="true" data-tab="regs">Inquiries</button>
       <button role="tab" aria-selected="false" data-tab="sched">Class schedule</button>
       <button role="tab" aria-selected="false" data-tab="events">Events</button>
     </div>
@@ -67,16 +67,16 @@ import '../styles/global.css';
     <section id="tab-regs">
       <div class="counts" id="counts"></div>
       <div class="filters">
-        <input type="search" id="q" placeholder="Search name, email or phone" />
-        <select id="program"><option value="">All groups</option><option>Teens</option><option>Adults</option><option>Family</option></select>
+        <input type="search" id="q" placeholder="Search name, email, phone or message" />
+        <select id="interest"><option value="">Interested in: all</option></select>
         <a class="btn btn-primary btn-small" href="/api/admin/export">Export CSV</a>
       </div>
       <div class="table-wrap">
         <table class="list">
-          <thead><tr><th>Received</th><th>Student</th><th>Age</th><th>Group</th><th>Contact</th><th>Status</th></tr></thead>
+          <thead><tr><th>Received</th><th>Name</th><th>Interested in</th><th>Message</th><th>Contact</th><th>Status</th></tr></thead>
           <tbody id="rows"></tbody>
         </table>
-        <div class="empty" id="empty" hidden>No registrations yet.</div>
+        <div class="empty" id="empty" hidden>No inquiries yet.</div>
       </div>
     </section>
 
@@ -135,14 +135,14 @@ import '../styles/global.css';
       <label style="margin-top:12px">Notes <textarea id="dlg-notes" rows="4"></textarea></label>
       <div class="actions">
         <button class="btn btn-primary btn-small" id="dlg-save" type="button">Save</button>
-        <button class="btn btn-danger btn-small" id="dlg-delete" type="button">Delete registration</button>
+        <button class="btn btn-danger btn-small" id="dlg-delete" type="button">Delete inquiry</button>
       </div>
     </div>
   </dialog>
   <div class="toast" id="toast"></div>
 
   <script>
-    import { STATUSES, DAYS, EVENT_KINDS, ageOn } from '../../lib/registration.js';
+    import { STATUSES, INTERESTS, DAYS, EVENT_KINDS } from '../../lib/forms.js';
 
     const $ = (id) => document.getElementById(id)!;
     const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
@@ -177,7 +177,8 @@ import '../styles/global.css';
       $('rows').innerHTML = regs
         .map((r) => {
           const when = new Date(r.created_at).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-          return `<tr data-id="${r.id}" id="reg-${r.id}"><td>${esc(when)}</td><td><strong>${esc(r.student_first)} ${esc(r.student_last)}</strong></td><td>${esc(ageOn(r.dob))}</td><td>${esc(r.program)}</td><td>${esc(r.email)}<br><span class="muted">${esc(r.phone)}</span></td><td><span class="pill" data-s="${esc(r.status)}">${esc(r.status)}</span></td></tr>`;
+          const preview = r.message.length > 90 ? r.message.slice(0, 90) + '…' : r.message;
+          return `<tr data-id="${r.id}" id="inq-${r.id}"><td>${esc(when)}</td><td><strong>${esc(r.name)}</strong></td><td>${esc(r.interest)}</td><td class="msg">${esc(preview)}</td><td>${esc(r.email)}<br><span class="muted">${esc(r.phone)}</span></td><td><span class="pill" data-s="${esc(r.status)}">${esc(r.status)}</span></td></tr>`;
         })
         .join('');
       $('rows').querySelectorAll('tr').forEach((tr) => tr.addEventListener('click', () => open(Number((tr as HTMLElement).dataset.id))));
@@ -187,40 +188,36 @@ import '../styles/global.css';
     async function load() {
       const p = new URLSearchParams();
       if (statusFilter) p.set('status', statusFilter);
-      const prog = ($('program') as HTMLSelectElement).value;
-      if (prog) p.set('program', prog);
+      const interest = ($('interest') as HTMLSelectElement).value;
+      if (interest) p.set('interest', interest);
       const q = ($('q') as HTMLInputElement).value.trim();
       if (q) p.set('q', q);
       try {
-        const data = await api(`/api/admin/registrations?${p}`);
-        regs = data.registrations;
+        const data = await api(`/api/admin/inquiries?${p}`);
+        regs = data.inquiries;
         renderCounts(data.counts);
         renderRows();
         showErr('');
-        const m = location.hash.match(/^#reg-(\d+)$/);
+        const m = location.hash.match(/^#inq-(\d+)$/);
         if (m && !current) open(Number(m[1]));
       } catch (e) { showErr((e as Error).message); }
     }
 
     const FIELDS: [string, (r: any) => unknown][] = [
       ['Received', (r) => new Date(r.created_at).toLocaleString('en-CA')],
-      ['Date of birth', (r) => `${r.dob} (age ${ageOn(r.dob)})`],
-      ['Group', (r) => r.program], ['Experience', (r) => r.experience], ['Family members', (r) => r.family_members],
-      ['Parent or guardian', (r) => r.guardian_name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Town', (r) => r.city],
-      ['Preferred start', (r) => r.start_date], ['Preferred class', (r) => r.preferred_class], ['Heard about us', (r) => r.referral],
-      ['Medical notes', (r) => r.medical], ['Emergency contact', (r) => `${r.emergency_name}, ${r.emergency_phone}`],
-      ['Waiver accepted', (r) => (r.waiver ? 'Yes' : 'No')], ['Photo consent', (r) => (r.photo_consent ? 'Yes' : 'No')],
-      ['Emails', (r) => r.email_status],
+      ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Interested in', (r) => r.interest],
+      ['Heard about us', (r) => r.referral], ['Message', (r) => r.message], ['Emails', (r) => r.email_status],
     ];
+    ($('interest') as HTMLSelectElement).innerHTML += INTERESTS.map((i) => `<option>${esc(i)}</option>`).join('');
 
     function open(id: number) {
       current = regs.find((r) => r.id === id);
       if (!current) return;
-      $('dlg-title').textContent = `${current.student_first} ${current.student_last}`;
+      $('dlg-title').textContent = current.name;
       $('dlg-fields').innerHTML = FIELDS.map(([k, f]) => [k, f(current)]).filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
       $('dlg-status').innerHTML = STATUSES.map((s) => `<option ${s === current.status ? 'selected' : ''}>${esc(s)}</option>`).join('');
       ($('dlg-notes') as HTMLTextAreaElement).value = current.notes || '';
-      history.replaceState(null, '', `#reg-${id}`);
+      history.replaceState(null, '', `#inq-${id}`);
       ($('dlg') as HTMLDialogElement).showModal();
     }
     function close() { ($('dlg') as HTMLDialogElement).close(); }
@@ -228,7 +225,7 @@ import '../styles/global.css';
     $('dlg-close').addEventListener('click', close);
     $('dlg-save').addEventListener('click', async () => {
       try {
-        await api(`/api/admin/registrations/${current.id}`, { method: 'PATCH', body: JSON.stringify({ status: ($('dlg-status') as HTMLSelectElement).value, notes: ($('dlg-notes') as HTMLTextAreaElement).value }) });
+        await api(`/api/admin/inquiries/${current.id}`, { method: 'PATCH', body: JSON.stringify({ status: ($('dlg-status') as HTMLSelectElement).value, notes: ($('dlg-notes') as HTMLTextAreaElement).value }) });
         close(); toast('Saved'); load();
       } catch (e) { showErr((e as Error).message); }
     });
@@ -236,14 +233,14 @@ import '../styles/global.css';
       const btn = $('dlg-delete');
       if (btn.dataset.confirm !== 'yes') { btn.dataset.confirm = 'yes'; btn.textContent = 'Click again to delete permanently'; return; }
       try {
-        await api(`/api/admin/registrations/${current.id}`, { method: 'DELETE' });
-        btn.dataset.confirm = ''; btn.textContent = 'Delete registration';
+        await api(`/api/admin/inquiries/${current.id}`, { method: 'DELETE' });
+        btn.dataset.confirm = ''; btn.textContent = 'Delete inquiry';
         close(); toast('Deleted'); load();
       } catch (e) { showErr((e as Error).message); }
     });
 
     $('q').addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(load, 250); });
-    $('program').addEventListener('change', load);
+    $('interest').addEventListener('change', load);
 
     // Tabs
     document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => {
@@ -257,7 +254,7 @@ import '../styles/global.css';
     }));
 
     // Schedule editor
-    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class, all ages' }) {
+    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:00', name: 'Karate class (ages 13+)' }) {
       const div = document.createElement('div');
       div.className = 'sched-row';
       div.innerHTML = `<select data-k="day">${DAYS.map((d) => `<option ${d === c.day ? 'selected' : ''}>${d}</option>`).join('')}</select>

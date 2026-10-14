@@ -1,6 +1,6 @@
 // PUT /api/admin/events/:id (replace), DELETE /api/admin/events/:id
 import { json } from '../../../../lib/http.js';
-import { validateEvent } from '../../../../lib/registration.js';
+import { validateEvent } from '../../../../lib/forms.js';
 
 export async function onRequestPut({ request, env, params }) {
   const id = Number(params.id);

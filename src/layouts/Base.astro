@@ -38,11 +38,8 @@ const schemas = [business, ...schema];
 const nav = [
   ['/classes', 'Classes'],
   ['/instructors', 'Instructors'],
-  ['/first-class', 'Your First Class'],
   ['/about', 'About'],
   ['/events', 'Events'],
-  ['/faq', 'FAQ'],
-  ['/contact', 'Contact'],
 ];
 const path = cleanPath;
 ---
@@ -85,7 +82,7 @@ const path = cleanPath;
               <li><a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
             ))}
           </ul>
-          <a class="btn btn-primary" href="/register">Join now</a>
+          <a class="btn btn-primary" href="/inquire">Get in touch</a>
         </nav>
       </div>
     </header>
@@ -104,17 +101,18 @@ const path = cleanPath;
           </address>
         </div>
         <div>
-          <p class="footer-head">Classes</p>
+          <p class="footer-head">Class times</p>
           <ul class="plain">
-            {DEFAULT_SCHEDULE.map((c) => <li>{c.day}s, {fmtRange(c.start, c.end)}</li>)}
+            {DEFAULT_SCHEDULE.map((c) => <li>{c.day}s, {fmtRange(c.start, c.end)}<br /><small>{c.name}</small></li>)}
           </ul>
           <p class="muted">Member club of the {SITE.affiliation}</p>
         </div>
         <div>
           <p class="footer-head">Links</p>
           <ul class="plain">
-            <li><a href="/register">Register</a></li>
+            <li><a href="/inquire">Get in touch</a></li>
             <li><a href="/faq">FAQ</a></li>
+            <li><a href="/contact">Contact and directions</a></li>
             <li><a href="/privacy">Privacy policy</a></li>
             {SITE.googleReviewUrl && <li><a href={SITE.googleReviewUrl} rel="noopener">Leave us a Google review</a></li>}
             {SITE.facebook && <li><a href={SITE.facebook} rel="noopener">Facebook</a></li>}

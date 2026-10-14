@@ -15,13 +15,13 @@ const course = {
 ---
 <Base
   title="Karate Classes and Pricing in Golden, BC"
-  description="Teen and adult karate classes in Golden, BC, ages 13+. Monday and Wednesday, 6:00 to 7:00 pm. See our age guide, belt ranks and affordable term pricing with uniform included."
+  description="Teen and adult karate classes in Golden, BC, ages 13+. Monday and Wednesday, 6:00 to 7:00 pm, plus Friday open training. See our age guide, belt ranks and affordable term pricing with uniform included."
   schema={[course]}
 >
   <section class="page-head">
     <div class="wrap">
       <h1>Karate classes in Golden, BC</h1>
-      <p>Two classes a week, Monday and Wednesday evenings, open to every age and level.</p>
+      <p>Two instructed classes a week on Monday and Wednesday evenings, plus open training on Friday. Open to teens and adults at every level.</p>
     </div>
   </section>
 
@@ -30,6 +30,7 @@ const course = {
       <div>
         <h2>Class schedule</h2>
         <Schedule />
+        <p><strong>Friday open training</strong> is time on the floor to practise on your own. There is no instruction.</p>
         <p class="muted">Classes follow the local school calendar for holiday closures. Check this page or our Google listing before holidays.</p>
       </div>
       <div class="card">
@@ -37,11 +38,11 @@ const course = {
         <p>{PRICING.note}</p>
         <Prices />
         <ul>
-          <li>Train at both weekly classes</li>
+          <li>Train at both weekly classes and Friday open training</li>
           <li>Karate uniform (gi) included</li>
           <li>Insurance included</li>
         </ul>
-        <a class="btn btn-primary" href="/register">Join now</a>
+        <a class="btn btn-primary" href="/inquire">Ask about joining</a>
       </div>
     </div>
   </section>
@@ -65,7 +66,7 @@ const course = {
   <section class="section">
     <div class="wrap prose">
       <h2>What a class looks like</h2>
-      <p>Each 90-minute class follows the traditional Shotokan structure:</p>
+      <p>Each one-hour class follows the traditional Shotokan structure:</p>
       <ol>
         <li><strong>Warm-up</strong> and stretching</li>
         <li><strong>Kihon</strong>: basic punches, blocks, kicks and stances</li>

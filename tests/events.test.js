@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEvent } from '../lib/registration.js';
+import { validateEvent } from '../lib/forms.js';
 
 const base = { title: 'Fall kyu grading', kind: 'Grading', date: '2026-11-21', start_time: '10:00', end_time: '12:00' };
 

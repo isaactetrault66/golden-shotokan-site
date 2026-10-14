@@ -1,13 +1,9 @@
-// POST /api/register: saves a registration, then emails the club and the family.
-import { validateRegistration } from '../../lib/registration.js';
-import { sendRegistrationEmails } from '../../lib/email.js';
+// POST /api/inquire: saves an inquiry, then emails the club and the sender.
+import { validateInquiry } from '../../lib/forms.js';
+import { sendInquiryEmails } from '../../lib/email.js';
 import { json } from '../../lib/http.js';
 
-const COLUMNS = [
-  'student_first', 'student_last', 'dob', 'program', 'experience', 'family_members', 'guardian_name',
-  'email', 'phone', 'city', 'start_date', 'preferred_class', 'referral', 'medical',
-  'emergency_name', 'emergency_phone', 'waiver', 'photo_consent',
-];
+const COLUMNS = ['name', 'email', 'phone', 'interest', 'message', 'referral'];
 
 const MAX_PER_HOUR = 5;
 
@@ -44,10 +40,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
     return fail('Could not read the form.');
   }
 
-  const result = validateRegistration(form);
+  const result = validateInquiry(form);
   if (!result.ok) {
     // Pretend success to bots that fill the honeypot.
-    if (result.spam) return wantsJson ? json({ ok: true }) : Response.redirect(new URL('/register/thanks', request.url), 303);
+    if (result.spam) return wantsJson ? json({ ok: true }) : Response.redirect(new URL('/inquire/thanks', request.url), 303);
     return fail(result.error);
   }
 
@@ -59,27 +55,27 @@ export async function onRequestPost({ request, env, waitUntil }) {
   const ipHash = ip ? await hashIp(ip, env.IP_SALT || env.SITE_URL || 'golden-shotokan') : null;
   if (ipHash) {
     const recent = await env.DB.prepare(
-      "SELECT COUNT(*) AS n FROM registrations WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')"
+      "SELECT COUNT(*) AS n FROM inquiries WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')"
     ).bind(ipHash).first('n');
     if (recent >= MAX_PER_HOUR) {
-      return fail('Too many registrations from this device in the last hour. Please email us instead.', 429);
+      return fail('Too many messages from this device in the last hour. Please email us instead.', 429);
     }
   }
 
   const r = result.data;
   const row = await env.DB.prepare(
-    `INSERT INTO registrations (${COLUMNS.join(', ')}, ip_hash) VALUES (${COLUMNS.map(() => '?').join(', ')}, ?) RETURNING id`
+    `INSERT INTO inquiries (${COLUMNS.join(', ')}, ip_hash) VALUES (${COLUMNS.map(() => '?').join(', ')}, ?) RETURNING id`
   )
     .bind(...COLUMNS.map((c) => r[c]), ipHash)
     .first();
   const id = row.id;
 
-  // Saved first, so a failed email never loses a registration.
+  // Saved first, so a failed email never loses an inquiry.
   waitUntil(
-    sendRegistrationEmails(env, r, id).then((status) =>
-      env.DB.prepare('UPDATE registrations SET email_status = ? WHERE id = ?').bind(status, id).run()
+    sendInquiryEmails(env, r, id).then((status) =>
+      env.DB.prepare('UPDATE inquiries SET email_status = ? WHERE id = ?').bind(status, id).run()
     )
   );
 
-  return wantsJson ? json({ ok: true, id }) : Response.redirect(new URL('/register/thanks', request.url), 303);
+  return wantsJson ? json({ ok: true, id }) : Response.redirect(new URL('/inquire/thanks', request.url), 303);
 }

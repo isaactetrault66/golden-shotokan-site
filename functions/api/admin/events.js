@@ -1,6 +1,6 @@
 // GET /api/admin/events (all), POST /api/admin/events (create)
 import { json } from '../../../lib/http.js';
-import { validateEvent } from '../../../lib/registration.js';
+import { validateEvent } from '../../../lib/forms.js';
 
 export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare('SELECT * FROM events ORDER BY date DESC, start_time').all();

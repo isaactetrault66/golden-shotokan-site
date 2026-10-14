@@ -23,10 +23,10 @@ const mapQuery = encodeURIComponent(`${SITE.name}, ${SITE.city}, ${SITE.region}`
           Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
         </address>
         <h3 style="margin-top:24px">Class times</h3>
-        <ul>{DEFAULT_SCHEDULE.map((c) => <li>{c.day}, {fmtRange(c.start, c.end)}</li>)}</ul>
+        <ul>{DEFAULT_SCHEDULE.map((c) => <li>{c.day}, {fmtRange(c.start, c.end)}: {c.name}</li>)}</ul>
         <h3>Parking and getting here</h3>
         <p>Enter by the <strong>{SITE.entrance.charAt(0).toLowerCase() + SITE.entrance.slice(1)}</strong>, {SITE.street}.</p>
-        <p><a class="btn btn-primary" href="/register">Join now</a></p>
+        <p><a class="btn btn-primary" href="/inquire">Send us a message</a></p>
       </div>
       <div>
         <iframe
