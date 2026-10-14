@@ -41,8 +41,12 @@ const explore = [
   </section>
 
   <section class="kun-strip" aria-label="The dojo kun">
-    <div class="wrap">
-      <ol>{DOJO_KUN.map((k, i) => <li><span>{i + 1}.</span>{k.en}</li>)}</ol>
+    <div class="kun-track">
+      {[0, 1].map((copy) => (
+        <ul aria-hidden={copy ? 'true' : undefined}>
+          {DOJO_KUN.map((k) => <li><strong>{k.en}</strong><span lang="ja">一、{k.ja}</span></li>)}
+        </ul>
+      ))}
     </div>
   </section>
 

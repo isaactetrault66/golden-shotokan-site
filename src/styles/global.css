@@ -150,10 +150,20 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .kata-list { margin: 0; }
 .kata-list dt { font-weight: 700; margin-top: 10px; }
 .kata-list dd { margin: 0; color: var(--muted); }
-.kun-strip { background: var(--red); color: #fff; padding: 18px 0; }
-.kun-strip ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px; }
-.kun-strip li { font-weight: 600; letter-spacing: .02em; }
-.kun-strip li span { font-weight: 400; opacity: .8; margin-right: 6px; }
+.kun-strip { background: #0f1638; color: #fff; overflow: hidden; border-top: 3px solid var(--red); border-bottom: 1px solid #0a0f28; }
+.kun-track { display: flex; width: max-content; animation: kun-scroll 45s linear infinite; }
+.kun-strip:hover .kun-track { animation-play-state: paused; }
+.kun-strip ul { list-style: none; margin: 0; padding: 0; display: flex; flex: none; }
+.kun-strip li { display: flex; align-items: center; gap: 14px; padding: 16px 28px; white-space: nowrap; }
+.kun-strip li::after { content: '·'; color: #ff7a6e; margin-left: 28px; }
+.kun-strip strong { font-size: .82rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.kun-strip span { color: #ff7a6e; font-size: 1rem; letter-spacing: .08em; }
+@keyframes kun-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .kun-track { animation: none; width: auto; }
+  .kun-strip ul { flex-wrap: wrap; justify-content: center; }
+  .kun-strip ul[aria-hidden] { display: none; }
+}
 .explore a.card { display: block; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
 .explore a.card:hover { border-color: var(--navy); transform: translateY(-2px); }
 .explore a.card p { color: var(--muted); margin: 0; }
