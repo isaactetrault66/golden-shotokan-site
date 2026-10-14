@@ -38,6 +38,7 @@ Search the code for `TODO`. Most live in **`src/config.js`**:
 - [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
 - [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the club page.
 - [ ] Confirm the belt colours on the Shotokan page (`src/pages/shotokan.astro`; kata follow the ISKF syllabus, colours vary between dojos), and who Sensei Tyler trained under, to complete the lineage
+- [ ] BC Community Gaming Grant: the acknowledgement shows above the footer on every page (`src/components/BCAcknowledgement.astro`). If the grant package includes the official BC logo, add it there.
 - [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching under-18 students hold criminal record checks and first aid
 
 ## Run it locally

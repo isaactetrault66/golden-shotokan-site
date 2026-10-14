@@ -1,0 +1,24 @@
+---
+// Funding acknowledgement required by the BC Community Gaming Grant.
+// The mountains rise into the footer. If the grant package includes the
+// official BC logo, add it to public/images and set LOGO below.
+const LOGO = '';
+---
+<section class="bc-ack" aria-label="Funding acknowledgement">
+  <div class="wrap bc-ack-inner">
+    <div class="bc-ack-card">
+      {LOGO && <img src={LOGO} alt="Province of British Columbia" width="140" height="56" />}
+      <div>
+        <p class="bc-ack-eyebrow">Community Gaming Grant</p>
+        <p class="bc-ack-text">We gratefully acknowledge the financial support of the Province of British Columbia.</p>
+      </div>
+    </div>
+  </div>
+  <svg class="bc-ack-mountains" viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <circle cx="1170" cy="90" r="30" fill="#f0c46a" opacity=".9" />
+    <path fill="#8d9bd1" d="M0 150 L120 96 L210 132 L330 60 L450 128 L560 84 L690 140 L800 70 L930 126 L1040 52 L1170 120 L1290 78 L1440 132 V220 H0 Z" />
+    <path fill="#4b5aa3" d="M0 176 L90 138 L190 166 L300 108 L400 160 L520 120 L640 172 L760 112 L880 164 L1000 104 L1110 158 L1230 118 L1340 160 L1440 140 V220 H0 Z" />
+    <path fill="#fff" opacity=".85" d="M300 108 L322 120 L312 122 L300 116 L288 124 L279 121 Z M760 112 L781 124 L770 125 L760 120 L748 127 L740 124 Z M1000 104 L1022 117 L1011 118 L1000 112 L988 120 L979 117 Z" />
+    <path fill="#16204f" d="M0 200 L140 170 L260 192 L380 160 L520 196 L660 166 L800 194 L940 162 L1080 192 L1220 168 L1340 190 L1440 176 V220 H0 Z" />
+  </svg>
+</section>

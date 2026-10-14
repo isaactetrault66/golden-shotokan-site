@@ -1,4 +1,5 @@
 ---
+import BCAcknowledgement from '../components/BCAcknowledgement.astro';
 import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
 import '../styles/global.css';
 
@@ -89,6 +90,7 @@ const path = cleanPath;
     <main id="main">
       <slot />
     </main>
+    <BCAcknowledgement />
     <footer class="site-footer">
       <div class="wrap footer-grid">
         <div>
