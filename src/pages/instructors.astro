@@ -4,7 +4,7 @@ import JoinCallout from '../components/JoinCallout.astro';
 
 // TODO: bio and photo for each instructor.
 const instructors = [
-  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: 'Sensei Tyler leads every Monday and Wednesday class. A longer bio is coming soon.' },
+  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: 'Sensei Tyler leads every Monday and Wednesday class. A longer bio is coming soon.', video: 'tyler-bow', wide: 'tyler-shomen' },
 ];
 ---
 <Base
@@ -18,17 +18,44 @@ const instructors = [
     </div>
   </section>
   <section class="section">
-    <div class="wrap grid">
+    <div class="wrap">
       {instructors.map((i) => (
-        <article class="card">
-          <div class="photo-placeholder" style="margin-bottom:16px">Photo of {i.name}</div>
-          <h2 style="font-size:1.4rem">{i.name}</h2>
-          <p class="muted">{i.role} · {i.rank}</p>
-          <p>{i.bio}</p>
+        <article class="profile">
+          <video class="profile-video" autoplay muted loop playsinline poster={`/video/${i.video}.jpg`} aria-label={`${i.name} bowing in at the dojo`} width="540" height="960">
+            <source src={`/video/${i.video}.webm`} type="video/webm" />
+            <source src={`/video/${i.video}.mp4`} type="video/mp4" />
+          </video>
+          <div class="profile-body">
+            <p class="eyebrow">{i.role}</p>
+            <h2>{i.name}</h2>
+            <p class="profile-rank">{i.rank}</p>
+            <p>{i.bio}</p>
+            {i.wide && (
+              <video class="profile-wide" autoplay muted loop playsinline poster={`/video/${i.wide}.jpg`} aria-label={`${i.name} bowing at the front of the dojo`} width="1280" height="720">
+                <source src={`/video/${i.wide}.webm`} type="video/webm" />
+                <source src={`/video/${i.wide}.mp4`} type="video/mp4" />
+              </video>
+            )}
+          </div>
         </article>
       ))}
+      <div class="kata-demo">
+        <div>
+          <h2>Kata demonstration</h2>
+          <p>Watch Sensei Tyler perform a full kata at our dojo in Golden. Press play to watch with sound.</p>
+        </div>
+        <video controls playsinline preload="metadata" poster="/video/tyler-kata.jpg" width="540" height="960" aria-label="Sensei Tyler Tetrault performing a kata">
+          <source src="/video/tyler-kata.mp4" type="video/mp4" />
+        </video>
+      </div>
     </div>
   </section>
+  <script>
+    // Visitors who turn off motion see the still poster frames instead.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll<HTMLVideoElement>('.profile video').forEach((v) => { v.autoplay = false; v.pause(); });
+    }
+  </script>
   <section class="section section-alt">
     <div class="wrap prose">
       <h2>Safe for teens</h2>
