@@ -9,14 +9,14 @@ import '../styles/global.css';
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Admin | Golden Shotokan</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>Admin | Golden Shotokan Karate Society</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
   <style is:global>
-    body { background: #f4f1ec; }
+    body { background: #f2f4fa; }
     .bar { background: var(--ink); color: #fff; }
     .bar .wrap { display: flex; justify-content: space-between; align-items: center; min-height: 56px; gap: 12px; flex-wrap: wrap; }
     .bar a { color: #fff; }
-    .tabs { display: flex; gap: 8px; margin: 20px 0; }
+    .tabs { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
     .tabs button { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font: inherit; cursor: pointer; }
     .tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
     .counts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -30,13 +30,13 @@ import '../styles/global.css';
     table.list { width: 100%; border-collapse: collapse; font-size: .95rem; }
     table.list th, table.list td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
     table.list tbody tr { cursor: pointer; }
-    table.list tbody tr:hover { background: #faf6f0; }
+    table.list tbody tr:hover { background: #f5f7fc; }
     .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600; background: #eee; }
     .pill[data-s="New"] { background: #fde2df; color: #8c1d17; }
-    .pill[data-s="Contacted"] { background: #fff1d6; color: #7a5200; }
-    .pill[data-s="First class done"] { background: #e2eefc; color: #1d4b8c; }
-    .pill[data-s="Enrolled"] { background: #dff3e4; color: #1d6b35; }
-    .pill[data-s="Not continuing"] { background: #eee; color: #555; }
+    .pill[data-s="Replied"] { background: #e2eefc; color: #1d4b8c; }
+    .pill[data-s="Joined"] { background: #dff3e4; color: #1d6b35; }
+    .pill[data-s="Closed"] { background: #eee; color: #555; }
+    td.msg { white-space: normal; max-width: 360px; color: var(--muted); }
     dialog { border: 0; border-radius: 12px; padding: 0; width: min(720px, 94vw); max-height: 90vh; }
     dialog::backdrop { background: rgba(0,0,0,.4); }
     .dlg-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; }
@@ -55,27 +55,30 @@ import '../styles/global.css';
   </style>
 </head>
 <body>
-  <div class="bar"><div class="wrap"><strong>Golden Shotokan admin</strong><span><span id="who"></span> · <a href="/">View site</a> · <a href="/cdn-cgi/access/logout">Sign out</a></span></div></div>
+  <div class="bar"><div class="wrap"><strong>Golden Shotokan Karate Society admin</strong><span><span id="who"></span> · <a href="/">View site</a> · <a href="/cdn-cgi/access/logout">Sign out</a></span></div></div>
   <main class="wrap" style="padding-bottom:60px">
     <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" data-tab="regs">Registrations</button>
+      <button role="tab" aria-selected="true" data-tab="regs">Inquiries</button>
       <button role="tab" aria-selected="false" data-tab="sched">Class schedule</button>
+      <button role="tab" aria-selected="false" data-tab="events">Events</button>
+      <button role="tab" aria-selected="false" data-tab="clips">Training clips</button>
+      <button role="tab" aria-selected="false" data-tab="results">Results</button>
     </div>
     <div class="form-msg" id="err" role="alert"></div>
 
     <section id="tab-regs">
       <div class="counts" id="counts"></div>
       <div class="filters">
-        <input type="search" id="q" placeholder="Search name, email or phone" />
-        <select id="program"><option value="">All groups</option><option>Kids</option><option>Teens</option><option>Adults</option><option>Family</option></select>
+        <input type="search" id="q" placeholder="Search name, email, phone or message" />
+        <select id="interest"><option value="">Interested in: all</option></select>
         <a class="btn btn-primary btn-small" href="/api/admin/export">Export CSV</a>
       </div>
       <div class="table-wrap">
         <table class="list">
-          <thead><tr><th>Received</th><th>Student</th><th>Age</th><th>Group</th><th>Contact</th><th>Status</th></tr></thead>
+          <thead><tr><th>Received</th><th>Name</th><th>Interested in</th><th>Message</th><th>Contact</th><th>Status</th></tr></thead>
           <tbody id="rows"></tbody>
         </table>
-        <div class="empty" id="empty" hidden>No registrations yet.</div>
+        <div class="empty" id="empty" hidden>No inquiries yet.</div>
       </div>
     </section>
 
@@ -91,6 +94,103 @@ import '../styles/global.css';
         <div class="actions"><button class="btn btn-primary" id="save-sched" type="button">Save schedule</button></div>
       </div>
     </section>
+    <section id="tab-events" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 id="ev-form-title">Add an event</h2>
+        <p class="muted">Gradings, seminars, tournaments, club events and holiday closures. Published events show on the Events page and the home page.</p>
+        <form id="ev-form" class="stack" style="gap:14px">
+          <div class="row-2">
+            <label>Title *<input name="title" required maxlength="120" placeholder="e.g. Fall kyu grading" /></label>
+            <label>Type<select name="kind"></select></label>
+          </div>
+          <div class="row-2">
+            <label>Date *<input type="date" name="date" required /></label>
+            <label>Location (optional)<input name="location" maxlength="160" placeholder="Leave empty for the usual dojo" /></label>
+          </div>
+          <div class="row-2">
+            <label>Start time<input type="time" name="start_time" /></label>
+            <label>End time<input type="time" name="end_time" /></label>
+          </div>
+          <label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" id="ev-save">Add event</button>
+            <button class="btn btn-ghost btn-small" type="button" id="ev-cancel" hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Date</th><th>Event</th><th>Type</th><th>Shown</th><th></th></tr></thead>
+          <tbody id="ev-rows"></tbody>
+        </table>
+        <div class="empty" id="ev-empty" hidden>No events yet.</div>
+      </div>
+    </section>
+
+    <section id="tab-clips" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 data-title>Add a training clip</h2>
+        <p class="muted">Upload the video to YouTube (unlisted is fine) or Vimeo, then paste the link here. Clips show on the Training clips page, and under their tournament on the Events page.</p>
+        <form class="stack" style="gap:14px" data-form>
+          <div class="row-2">
+            <label>Title *<input name="title" required maxlength="120" placeholder="e.g. Team kata practice" /></label>
+            <label>Video link *<input name="url" required maxlength="500" type="url" placeholder="https://youtu.be/..." /></label>
+          </div>
+          <div class="row-2">
+            <label>Tournament (optional)<input name="competition" maxlength="120" list="competitions" placeholder="Leave empty for general training" /></label>
+            <label>Recorded on<input type="date" name="recorded_on" /></label>
+          </div>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" data-save>Add clip</button>
+            <button class="btn btn-ghost btn-small" type="button" data-cancel hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Recorded</th><th>Clip</th><th>Tournament</th><th>Shown</th><th></th></tr></thead>
+          <tbody data-rows></tbody>
+        </table>
+        <div class="empty" data-empty hidden>No clips yet.</div>
+      </div>
+    </section>
+
+    <section id="tab-results" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 data-title>Add a result</h2>
+        <p class="muted">One line per athlete per event. Results show on the Tournament results page with a medal count, and under their tournament on the Events page.</p>
+        <form class="stack" style="gap:14px" data-form>
+          <div class="row-2">
+            <label>Tournament *<input name="competition" required maxlength="120" list="competitions" /></label>
+            <label>Tournament date *<input type="date" name="competition_date" required /></label>
+          </div>
+          <div class="row-2">
+            <label>Athlete *<input name="athlete" required maxlength="120" /></label>
+            <label>Division (optional)<input name="division" maxlength="120" placeholder="e.g. Men 45 to 54, black belt" /></label>
+          </div>
+          <div class="row-2">
+            <label>Event<select name="event_type"></select></label>
+            <label>Place<select name="place"></select></label>
+          </div>
+          <label>Note (optional)<input name="note" maxlength="300" placeholder="e.g. kata performed" /></label>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" data-save>Add result</button>
+            <button class="btn btn-ghost btn-small" type="button" data-cancel hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Date</th><th>Tournament</th><th>Athlete</th><th>Event</th><th>Place</th><th>Shown</th><th></th></tr></thead>
+          <tbody data-rows></tbody>
+        </table>
+        <div class="empty" data-empty hidden>No results yet.</div>
+      </div>
+    </section>
+    <datalist id="competitions"></datalist>
   </main>
 
   <dialog id="dlg">
@@ -101,14 +201,14 @@ import '../styles/global.css';
       <label style="margin-top:12px">Notes <textarea id="dlg-notes" rows="4"></textarea></label>
       <div class="actions">
         <button class="btn btn-primary btn-small" id="dlg-save" type="button">Save</button>
-        <button class="btn btn-danger btn-small" id="dlg-delete" type="button">Delete registration</button>
+        <button class="btn btn-danger btn-small" id="dlg-delete" type="button">Delete inquiry</button>
       </div>
     </div>
   </dialog>
   <div class="toast" id="toast"></div>
 
   <script>
-    import { STATUSES, DAYS, ageOn } from '../../lib/registration.js';
+    import { STATUSES, INTERESTS, DAYS, EVENT_KINDS, RESULT_EVENTS, PLACES } from '../../lib/forms.js';
 
     const $ = (id) => document.getElementById(id)!;
     const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
@@ -143,7 +243,8 @@ import '../styles/global.css';
       $('rows').innerHTML = regs
         .map((r) => {
           const when = new Date(r.created_at).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
-          return `<tr data-id="${r.id}" id="reg-${r.id}"><td>${esc(when)}</td><td><strong>${esc(r.student_first)} ${esc(r.student_last)}</strong></td><td>${esc(ageOn(r.dob))}</td><td>${esc(r.program)}</td><td>${esc(r.email)}<br><span class="muted">${esc(r.phone)}</span></td><td><span class="pill" data-s="${esc(r.status)}">${esc(r.status)}</span></td></tr>`;
+          const preview = r.message.length > 90 ? r.message.slice(0, 90) + '…' : r.message;
+          return `<tr data-id="${r.id}" id="inq-${r.id}"><td>${esc(when)}</td><td><strong>${esc(r.name)}</strong></td><td>${esc(r.interest)}</td><td class="msg">${esc(preview)}</td><td>${esc(r.email)}<br><span class="muted">${esc(r.phone)}</span></td><td><span class="pill" data-s="${esc(r.status)}">${esc(r.status)}</span></td></tr>`;
         })
         .join('');
       $('rows').querySelectorAll('tr').forEach((tr) => tr.addEventListener('click', () => open(Number((tr as HTMLElement).dataset.id))));
@@ -153,40 +254,36 @@ import '../styles/global.css';
     async function load() {
       const p = new URLSearchParams();
       if (statusFilter) p.set('status', statusFilter);
-      const prog = ($('program') as HTMLSelectElement).value;
-      if (prog) p.set('program', prog);
+      const interest = ($('interest') as HTMLSelectElement).value;
+      if (interest) p.set('interest', interest);
       const q = ($('q') as HTMLInputElement).value.trim();
       if (q) p.set('q', q);
       try {
-        const data = await api(`/api/admin/registrations?${p}`);
-        regs = data.registrations;
+        const data = await api(`/api/admin/inquiries?${p}`);
+        regs = data.inquiries;
         renderCounts(data.counts);
         renderRows();
         showErr('');
-        const m = location.hash.match(/^#reg-(\d+)$/);
+        const m = location.hash.match(/^#inq-(\d+)$/);
         if (m && !current) open(Number(m[1]));
       } catch (e) { showErr((e as Error).message); }
     }
 
     const FIELDS: [string, (r: any) => unknown][] = [
       ['Received', (r) => new Date(r.created_at).toLocaleString('en-CA')],
-      ['Date of birth', (r) => `${r.dob} (age ${ageOn(r.dob)})`],
-      ['Group', (r) => r.program], ['Experience', (r) => r.experience], ['Family members', (r) => r.family_members],
-      ['Parent or guardian', (r) => r.guardian_name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Town', (r) => r.city],
-      ['Preferred start', (r) => r.start_date], ['Preferred class', (r) => r.preferred_class], ['Heard about us', (r) => r.referral],
-      ['Medical notes', (r) => r.medical], ['Emergency contact', (r) => `${r.emergency_name}, ${r.emergency_phone}`],
-      ['Waiver accepted', (r) => (r.waiver ? 'Yes' : 'No')], ['Photo consent', (r) => (r.photo_consent ? 'Yes' : 'No')],
-      ['Emails', (r) => r.email_status],
+      ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Interested in', (r) => r.interest],
+      ['Heard about us', (r) => r.referral], ['Message', (r) => r.message], ['Emails', (r) => r.email_status],
     ];
+    ($('interest') as HTMLSelectElement).innerHTML += INTERESTS.map((i) => `<option>${esc(i)}</option>`).join('');
 
     function open(id: number) {
       current = regs.find((r) => r.id === id);
       if (!current) return;
-      $('dlg-title').textContent = `${current.student_first} ${current.student_last}`;
+      $('dlg-title').textContent = current.name;
       $('dlg-fields').innerHTML = FIELDS.map(([k, f]) => [k, f(current)]).filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
       $('dlg-status').innerHTML = STATUSES.map((s) => `<option ${s === current.status ? 'selected' : ''}>${esc(s)}</option>`).join('');
       ($('dlg-notes') as HTMLTextAreaElement).value = current.notes || '';
-      history.replaceState(null, '', `#reg-${id}`);
+      history.replaceState(null, '', `#inq-${id}`);
       ($('dlg') as HTMLDialogElement).showModal();
     }
     function close() { ($('dlg') as HTMLDialogElement).close(); }
@@ -194,7 +291,7 @@ import '../styles/global.css';
     $('dlg-close').addEventListener('click', close);
     $('dlg-save').addEventListener('click', async () => {
       try {
-        await api(`/api/admin/registrations/${current.id}`, { method: 'PATCH', body: JSON.stringify({ status: ($('dlg-status') as HTMLSelectElement).value, notes: ($('dlg-notes') as HTMLTextAreaElement).value }) });
+        await api(`/api/admin/inquiries/${current.id}`, { method: 'PATCH', body: JSON.stringify({ status: ($('dlg-status') as HTMLSelectElement).value, notes: ($('dlg-notes') as HTMLTextAreaElement).value }) });
         close(); toast('Saved'); load();
       } catch (e) { showErr((e as Error).message); }
     });
@@ -202,14 +299,14 @@ import '../styles/global.css';
       const btn = $('dlg-delete');
       if (btn.dataset.confirm !== 'yes') { btn.dataset.confirm = 'yes'; btn.textContent = 'Click again to delete permanently'; return; }
       try {
-        await api(`/api/admin/registrations/${current.id}`, { method: 'DELETE' });
-        btn.dataset.confirm = ''; btn.textContent = 'Delete registration';
+        await api(`/api/admin/inquiries/${current.id}`, { method: 'DELETE' });
+        btn.dataset.confirm = ''; btn.textContent = 'Delete inquiry';
         close(); toast('Deleted'); load();
       } catch (e) { showErr((e as Error).message); }
     });
 
     $('q').addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(load, 250); });
-    $('program').addEventListener('change', load);
+    $('interest').addEventListener('change', load);
 
     // Tabs
     document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => {
@@ -217,11 +314,17 @@ import '../styles/global.css';
       const tab = (b as HTMLElement).dataset.tab;
       $('tab-regs').hidden = tab !== 'regs';
       $('tab-sched').hidden = tab !== 'sched';
+      $('tab-events').hidden = tab !== 'events';
+      $('tab-clips').hidden = tab !== 'clips';
+      $('tab-results').hidden = tab !== 'results';
       if (tab === 'sched') loadSchedule();
+      if (tab === 'events') loadEvents();
+      if (tab === 'clips') clipsEditor.load();
+      if (tab === 'results') resultsEditor.load();
     }));
 
     // Schedule editor
-    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:30', name: 'Karate class, all ages' }) {
+    function schedRow(c: any = { day: 'Monday', start: '18:00', end: '19:30', name: 'Karate class (ages 13+)' }) {
       const div = document.createElement('div');
       div.className = 'sched-row';
       div.innerHTML = `<select data-k="day">${DAYS.map((d) => `<option ${d === c.day ? 'selected' : ''}>${d}</option>`).join('')}</select>
@@ -250,6 +353,126 @@ import '../styles/global.css';
         await api('/api/admin/schedule', { method: 'PUT', body: JSON.stringify({ classes, notice: ($('notice') as HTMLInputElement).value }) });
         toast('Schedule saved'); showErr('');
       } catch (e) { showErr((e as Error).message); }
+    });
+
+    // Events editor
+    const evForm = $('ev-form') as HTMLFormElement;
+    (evForm.elements.namedItem('kind') as HTMLSelectElement).innerHTML = EVENT_KINDS.map((k) => `<option>${esc(k)}</option>`).join('');
+    let events: any[] = [];
+    let editingId: number | null = null;
+    function resetEventForm() {
+      evForm.reset();
+      editingId = null;
+      $('ev-form-title').textContent = 'Add an event';
+      $('ev-save').textContent = 'Add event';
+      $('ev-cancel').hidden = true;
+    }
+    async function loadEvents() {
+      try {
+        events = (await api('/api/admin/events')).events;
+        $('ev-empty').hidden = events.length > 0;
+        $('ev-rows').innerHTML = events.map((e) => `<tr data-id="${e.id}"><td>${esc(e.date)}</td><td><strong>${esc(e.title)}</strong></td><td>${esc(e.kind)}</td><td>${e.published ? 'Yes' : 'Hidden'}</td><td><button class="btn btn-ghost btn-small" data-edit="${e.id}" type="button">Edit</button> <button class="btn btn-danger btn-small" data-del="${e.id}" type="button">Delete</button></td></tr>`).join('');
+        $('ev-rows').querySelectorAll<HTMLElement>('[data-edit]').forEach((b) => b.addEventListener('click', () => {
+          const e = events.find((x) => x.id === Number(b.dataset.edit));
+          for (const k of ['title', 'kind', 'date', 'start_time', 'end_time', 'location', 'description']) (evForm.elements.namedItem(k) as HTMLInputElement).value = e[k] || '';
+          (evForm.elements.namedItem('published') as HTMLInputElement).checked = !!e.published;
+          editingId = e.id;
+          $('ev-form-title').textContent = 'Edit event';
+          $('ev-save').textContent = 'Save changes';
+          $('ev-cancel').hidden = false;
+          evForm.scrollIntoView({ behavior: 'smooth' });
+        }));
+        $('ev-rows').querySelectorAll<HTMLElement>('[data-del]').forEach((b) => b.addEventListener('click', async () => {
+          if (b.dataset.confirm !== 'yes') { b.dataset.confirm = 'yes'; b.textContent = 'Click again'; return; }
+          try { await api(`/api/admin/events/${b.dataset.del}`, { method: 'DELETE' }); toast('Event deleted'); loadEvents(); } catch (e) { showErr((e as Error).message); }
+        }));
+      } catch (e) { showErr((e as Error).message); }
+    }
+    $('ev-cancel').addEventListener('click', resetEventForm);
+    evForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (!evForm.checkValidity()) { evForm.reportValidity(); return; }
+      const fd = new FormData(evForm);
+      const body = { ...Object.fromEntries(fd), published: fd.get('published') === 'on' };
+      try {
+        if (editingId) await api(`/api/admin/events/${editingId}`, { method: 'PUT', body: JSON.stringify(body) });
+        else await api('/api/admin/events', { method: 'POST', body: JSON.stringify(body) });
+        toast(editingId ? 'Event saved' : 'Event added'); showErr('');
+        resetEventForm(); loadEvents();
+      } catch (e) { showErr((e as Error).message); }
+    });
+
+
+    // Training clips and results editors: a form above a list, edit and delete per row.
+    const competitions = new Set<string>(['2026 ISKF World Shoto Cup']);
+    const refreshCompetitions = () => ($('competitions').innerHTML = [...competitions].map((c) => `<option value="${esc(c)}"></option>`).join(''));
+    refreshCompetitions();
+    function listEditor(o: { section: string; endpoint: string; key: string; noun: string; fields: string[]; row: (x: any) => string }) {
+      const root = $(o.section);
+      const form = root.querySelector('[data-form]') as HTMLFormElement;
+      const q = (sel: string) => root.querySelector(sel) as HTMLElement;
+      let items: any[] = [];
+      let editing: number | null = null;
+      const reset = () => {
+        form.reset(); editing = null;
+        q('[data-title]').textContent = `Add a ${o.noun}`;
+        q('[data-save]').textContent = `Add ${o.noun}`;
+        q('[data-cancel]').hidden = true;
+      };
+      async function load() {
+        try {
+          items = (await api(o.endpoint))[o.key];
+          items.forEach((x) => x.competition && competitions.add(x.competition));
+          refreshCompetitions();
+          q('[data-empty]').hidden = items.length > 0;
+          q('[data-rows]').innerHTML = items.map((x) => `<tr>${o.row(x)}<td>${x.published ? 'Yes' : 'Hidden'}</td><td><button class="btn btn-ghost btn-small" data-edit="${x.id}" type="button">Edit</button> <button class="btn btn-danger btn-small" data-del="${x.id}" type="button">Delete</button></td></tr>`).join('');
+          root.querySelectorAll<HTMLElement>('[data-edit]').forEach((b) => b.addEventListener('click', () => {
+            const x = items.find((i) => i.id === Number(b.dataset.edit));
+            for (const k of o.fields) (form.elements.namedItem(k) as HTMLInputElement).value = x[k] || '';
+            (form.elements.namedItem('published') as HTMLInputElement).checked = !!x.published;
+            editing = x.id;
+            q('[data-title]').textContent = `Edit ${o.noun}`;
+            q('[data-save]').textContent = 'Save changes';
+            q('[data-cancel]').hidden = false;
+            form.scrollIntoView({ behavior: 'smooth' });
+          }));
+          root.querySelectorAll<HTMLElement>('[data-del]').forEach((b) => b.addEventListener('click', async () => {
+            if (b.dataset.confirm !== 'yes') { b.dataset.confirm = 'yes'; b.textContent = 'Click again'; return; }
+            try { await api(`${o.endpoint}/${b.dataset.del}`, { method: 'DELETE' }); toast(`Deleted`); load(); } catch (e) { showErr((e as Error).message); }
+          }));
+        } catch (e) { showErr((e as Error).message); }
+      }
+      q('[data-cancel]').addEventListener('click', reset);
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        const fd = new FormData(form);
+        const body = { ...Object.fromEntries(fd), published: fd.get('published') === 'on' };
+        try {
+          if (editing) await api(`${o.endpoint}/${editing}`, { method: 'PUT', body: JSON.stringify(body) });
+          else await api(o.endpoint, { method: 'POST', body: JSON.stringify(body) });
+          toast(editing ? 'Saved' : 'Added'); showErr('');
+          // Keep the tournament filled in so several results can be added in a row.
+          const keep = editing ? null : { competition: fd.get('competition'), competition_date: fd.get('competition_date') };
+          reset();
+          if (keep) for (const [k, v] of Object.entries(keep)) { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && v) el.value = String(v); }
+          load();
+        } catch (e) { showErr((e as Error).message); }
+      });
+      return { load };
+    }
+    const clipsEditor = listEditor({
+      section: 'tab-clips', endpoint: '/api/admin/clips', key: 'clips', noun: 'clip',
+      fields: ['title', 'url', 'competition', 'recorded_on'],
+      row: (c) => `<td>${esc(c.recorded_on || '')}</td><td><strong>${esc(c.title)}</strong><br><a href="${esc(c.url)}" target="_blank" rel="noopener" class="muted">Open link</a></td><td>${esc(c.competition || 'General training')}</td>`,
+    });
+    const resultsForm = $('tab-results').querySelector('[data-form]') as HTMLFormElement;
+    (resultsForm.elements.namedItem('event_type') as HTMLSelectElement).innerHTML = RESULT_EVENTS.map((k) => `<option>${esc(k)}</option>`).join('');
+    (resultsForm.elements.namedItem('place') as HTMLSelectElement).innerHTML = PLACES.map((k) => `<option>${esc(k)}</option>`).join('');
+    const resultsEditor = listEditor({
+      section: 'tab-results', endpoint: '/api/admin/results', key: 'results', noun: 'result',
+      fields: ['competition', 'competition_date', 'athlete', 'division', 'event_type', 'place', 'note'],
+      row: (r) => `<td>${esc(r.competition_date)}</td><td>${esc(r.competition)}</td><td><strong>${esc(r.athlete)}</strong></td><td>${esc(r.event_type)}${r.division ? `<br><span class="muted">${esc(r.division)}</span>` : ''}</td><td>${esc(r.place)}</td>`,
     });
 
     api('/api/admin/me').then((d) => ($('who').textContent = d.email)).catch(() => {});

@@ -1,0 +1,139 @@
+---
+// Featured ISKF event. Details from worldshotocup.mx and iskf.com (checked 2026-10-15).
+// Shown as a dropdown on the Events page; moves to Past events once it is over.
+import ClipsGallery from './ClipsGallery.astro';
+import ResultsBoard from './ResultsBoard.astro';
+
+// Training clips and results are linked to this event by this name in admin.
+const COMPETITION = '2026 ISKF World Shoto Cup';
+const ENDS = '2026-10-25';
+const site = 'https://worldshotocup.mx/';
+const schedule = [
+  { day: 'Wednesday, October 21', items: [['9:00 am to 5:00 pm', 'Check-in and registration, Hampton Inn by Hilton lobby']] },
+  { day: 'Thursday, October 22', items: [
+    ['9:30 am', 'Seminar with Shihan Okazaki (brown and black belts), Dojo Central ISKF Mérida'],
+    ['11:00 am', 'Judges course and exams'],
+    ['6:00 pm', 'Beginner and intermediate seminar (up to 4th kyu)'],
+  ] },
+  { day: 'Friday, October 23', items: [
+    ['9:30 am', 'Seminar with Shihan Okazaki (brown and black belts)'],
+    ['11:00 am', 'Dan examinations'],
+    ['3:30 pm', 'Green and purple belt tournament'],
+  ] },
+  { day: 'Saturday, October 24', items: [
+    ['8:00 am', 'Opening ceremony'],
+    ['9:00 am', 'Senior and brown belt tournaments'],
+  ] },
+  { day: 'Sunday, October 25', items: [
+    ['8:30 am', 'Black belt tournaments (17 and under, and 18 to 44)'],
+    ['8:00 pm', 'Closing banquet and Sayonara party'],
+  ] },
+];
+const fees = [
+  ['One event (kata or kumite)', '$40'],
+  ['Kata and kumite', '$60'],
+  ['Team kata or team kumite', '$80'],
+  ['Shihan Okazaki seminar', '$40 for one class, $60 for two'],
+  ['Judges course', 'Free (exam $80)'],
+  ['Closing banquet', '$80 per person'],
+  ['Spectators', '$2 per day, under 15 free'],
+];
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: '5th ISKF World Shoto Cup',
+  startDate: '2026-10-22',
+  endDate: '2026-10-25',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: {
+    '@type': 'Place',
+    name: 'Centro de Convenciones Yucatán Siglo XXI',
+    address: { '@type': 'PostalAddress', streetAddress: 'Calle 60 Norte 299, Zona Industrial', addressLocality: 'Mérida', addressRegion: 'Yucatán', addressCountry: 'MX' },
+  },
+  organizer: { '@type': 'Organization', name: 'ISKF México', url: site },
+  url: site,
+};
+---
+<details class="event-item feature-event" data-ends={ENDS} data-date="2026-10-22" id="world-shoto-cup">
+  <summary>
+    <span class="event-date" aria-hidden="true"><b>Oct</b>22–25</span>
+    <span class="event-sum">
+      <span class="event-kind">ISKF World Championship</span>
+      <span class="event-title">5th ISKF World Shoto Cup</span>
+      <span class="event-where">October 22 to 25, 2026 · Mérida, Yucatán, Mexico</span>
+    </span>
+    <span class="event-toggle" aria-hidden="true"></span>
+  </summary>
+  <div class="event-body">
+  <div class="feature-head">
+    <p>Shotokan karateka from ISKF clubs around the world meet in Mérida for four days of seminars, dan examinations and the world tournament in kata and kumite. The event is led by ISKF Chief Instructor Shihan Hiroyoshi Okazaki and hosted by ISKF México.</p>
+    <p class="feature-links">
+      <a class="btn btn-primary" href={site} target="_blank" rel="noopener">Official event site</a>
+      <a class="btn btn-ghost" href="https://www.iskf.com/events.html" target="_blank" rel="noopener">Forms and brochure (ISKF)</a>
+    </p>
+  </div>
+
+  <div class="feature-grid">
+    <section>
+      <h3>Schedule</h3>
+      <dl class="feature-schedule">
+        {schedule.map((d) => (
+          <>
+            <dt>{d.day}</dt>
+            {d.items.map(([t, what]) => <dd><span>{t}</span> {what}</dd>)}
+          </>
+        ))}
+      </dl>
+      <p class="muted small">Times are local to Mérida, which is on the same clock as Golden in October. Check the official site for changes.</p>
+    </section>
+
+    <div>
+      <section>
+        <h3>Where</h3>
+        <p><strong>Tournament:</strong> Centro de Convenciones Yucatán Siglo XXI, Calle 60 Norte #299, Zona Industrial, Mérida</p>
+        <p><strong>Seminars and judges course:</strong> Dojo Central ISKF Mérida, Calle 4 #141A x 4 Diagonal, Fracc. Montecristo</p>
+        <p><strong>Getting there:</strong> Fly into Mérida (MID), about a $25 USD taxi to the hotel area. From Cancún (CUN), ADO buses take about 3 hours 15 minutes. The organizers list partner hotels with group rates on the event site.</p>
+      </section>
+      <section>
+        <h3>Fees (USD)</h3>
+        <table class="feature-fees">
+          <tbody>
+            {fees.map(([what, cost]) => <tr><th scope="row">{what}</th><td>{cost}</td></tr>)}
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <section class="feature-foot">
+    <h3>Divisions and entries</h3>
+    <p>More than 100 individual and team divisions in kata and kumite, from age 7 to 55+ and from green belt to black belt. Competitors enter through their national ISKF organization. The published entry deadline was August 31, 2026, and dan and judge exam sign-up closed August 10, so talk to Sensei Tyler if you are thinking of going.</p>
+    <p class="muted small">Organizer contact: worldshotocup2026@hotmail.com · WhatsApp +52 999 324 5527</p>
+  </section>
+
+  <section class="feature-foot">
+    <h3>Our team's training</h3>
+    <ClipsGallery competition={COMPETITION} empty="Clips of our team training for the Cup will be posted here." />
+  </section>
+
+  <section class="feature-foot">
+    <h3>Results</h3>
+    <ResultsBoard competition={COMPETITION} empty="Our team's results will be posted here after the tournament." />
+  </section>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</details>
+<script>
+  // The day after it ends (Golden time), it moves to Past events.
+  document.querySelectorAll<HTMLElement>('.feature-event[data-ends]').forEach((el) => {
+    const past = document.querySelector('[data-past-list]');
+    if (past && Date.now() >= new Date(el.dataset.ends + 'T00:00:00-06:00').getTime() + 86400_000) {
+      el.classList.add('event-past');
+      past.prepend(el);
+      past.closest<HTMLElement>('[data-past-section]')!.hidden = false;
+    }
+  });
+  // Opens the dropdown when someone lands on #world-shoto-cup.
+  if (location.hash === '#world-shoto-cup') (document.getElementById('world-shoto-cup') as HTMLDetailsElement | null)?.setAttribute('open', '');
+</script>

@@ -2,38 +2,62 @@
 import Base from '../layouts/Base.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 
-// TODO: real instructors from the club (name, rank, years, bio, photo).
 const instructors = [
-  { name: 'Head Instructor (name to come)', rank: 'ISKF dan rank', bio: 'Bio to come: years training, lineage, teaching experience, certifications such as first aid and criminal record check.' },
-  { name: 'Assistant Instructor (name to come)', rank: 'ISKF rank', bio: 'Bio to come.' },
+  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: [
+    'Sensei Tyler first stepped into a Shotokan dojo at 16. He trained hard through his teenage years, then stepped away from karate at 19 as work and life took over.',
+    'At 34 he came back to the dojo, and this time he stayed. He started again with the basics, trained steadily through the ranks, and earned his 4th degree black belt. Along the way he went from student to instructor to sensei, and eventually opened his own dojo here in Golden.',
+    'For years Sensei Tyler has competed at the provincial, national and world levels. He brings that experience to every class, along with the patience of someone who knows what it is like to start over.',
+    'He still trains, still competes and is still learning. Today he leads every Monday and Wednesday class, and his goal is simple: to help each new student grow the way karate helped him.',
+  ], video: 'tyler-bow' },
 ];
 ---
 <Base
   title="Karate Instructors in Golden, BC"
-  description="Meet the ISKF-ranked Shotokan karate instructors at Golden Shotokan Karate Association in Golden, BC."
+  description="Meet Sensei Tyler Tetrault, 4th degree black belt and head instructor of ISKF Shotokan karate classes in Golden, BC."
 >
   <section class="page-head">
     <div class="wrap">
       <h1>Our instructors</h1>
-      <p>Experienced ISKF-ranked instructors who teach traditional Shotokan karate in Golden.</p>
+      <p>Learn traditional Shotokan karate in Golden from an experienced ISKF black belt.</p>
     </div>
   </section>
   <section class="section">
-    <div class="wrap grid">
+    <div class="wrap">
       {instructors.map((i) => (
-        <article class="card">
-          <div class="photo-placeholder" style="margin-bottom:16px">Instructor photo</div>
-          <h2 style="font-size:1.4rem">{i.name}</h2>
-          <p class="muted">{i.rank}</p>
-          <p>{i.bio}</p>
+        <article class="profile">
+          <video class="profile-video" autoplay muted loop playsinline poster={`/video/${i.video}.jpg`} aria-label={`${i.name} bowing in at the dojo`} width="540" height="960">
+            <source src={`/video/${i.video}.webm`} type="video/webm" />
+            <source src={`/video/${i.video}.mp4`} type="video/mp4" />
+          </video>
+          <div class="profile-body">
+            <p class="eyebrow">{i.role}</p>
+            <h2>{i.name}</h2>
+            <p class="profile-rank">{i.rank}</p>
+            {i.bio.map((para) => <p>{para}</p>)}
+          </div>
         </article>
       ))}
+      <div class="kata-demo">
+        <div>
+          <h2>Kata demonstration</h2>
+          <p>Watch Sensei Tyler perform a full kata at our dojo in Golden. Press play to watch with sound.</p>
+        </div>
+        <video controls playsinline preload="metadata" poster="/video/tyler-kata.jpg" width="540" height="960" aria-label="Sensei Tyler Tetrault performing a kata">
+          <source src="/video/tyler-kata.mp4" type="video/mp4" />
+        </video>
+      </div>
     </div>
   </section>
+  <script>
+    // Visitors who turn off motion see the still poster frames instead.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll<HTMLVideoElement>('.profile video').forEach((v) => { v.autoplay = false; v.pause(); });
+    }
+  </script>
   <section class="section section-alt">
     <div class="wrap prose">
-      <h2>Safe for kids</h2>
-      <p>Instructors who teach children hold current criminal record checks and first aid certification. Parents are always welcome to watch class.</p>
+      <h2>Safe for teens</h2>
+      <p>Instructors who teach students under 18 hold current criminal record checks and first aid certification. Parents are always welcome to watch class.</p>
     </div>
   </section>
   <JoinCallout />

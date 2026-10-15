@@ -2,35 +2,65 @@
 import Base from '../layouts/Base.astro';
 import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
-import { SITE, PRICING, AGE_GUIDE } from '../config.js';
+import EventsList from '../components/EventsList.astro';
+import Prices from '../components/Prices.astro';
+import { SITE, PRICING, AGE_GUIDE, DOJO_KUN } from '../config.js';
+
+const explore = [
+  ['/shotokan#lineage', 'Our lineage', 'From Gichin Funakoshi to the ISKF and our club in Golden.'],
+  ['/shotokan#ranks', 'Belt ranks', 'The grades from white belt to black belt, and the kata for each.'],
+  ['/shotokan#kata', 'The kata', 'The 26 Shotokan kata and what their names mean.'],
+  ['/shotokan#dojo-kun', 'The dojo kun', 'The five principles we recite at the end of every class.'],
+  ['/instructors', 'Our instructors', 'Meet Sensei Tyler Tetrault, 4th degree black belt.'],
+  ['/events', 'Events', 'Gradings, seminars, tournaments and club events.'],
+];
 ---
 <Base
-  title="Shotokan Karate Classes in Golden, BC | Golden Shotokan Karate Association"
-  description="Traditional ISKF Shotokan karate in Golden, BC for kids, teens and adults. Classes Monday and Wednesday evenings. Affordable, beginner friendly. Register online."
+  title="Shotokan Karate Classes in Golden, BC | Golden Shotokan Karate Society"
+  description="Traditional ISKF Shotokan karate in Golden, BC for teens and adults, ages 13+. Classes Monday and Wednesday evenings, plus Friday open training. Affordable and beginner friendly."
 >
-  <section class="hero">
-    <div class="wrap">
+  <section class="hero hero-video">
+    <video class="hero-bg" autoplay muted loop playsinline preload="metadata" poster="/video/hero-poster.jpg" aria-hidden="true">
+      <source src="/video/hero.webm" type="video/webm" />
+      <source src="/video/hero.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-tint" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <div>
       <p class="eyebrow">Golden, British Columbia</p>
       <h1>Shotokan Karate in Golden, BC</h1>
-      <p class="lead">Traditional ISKF karate for kids, teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
+      <p class="lead">Traditional ISKF karate for teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/register">Join now</a>
-        <a class="btn btn-ghost" href="/first-class">What to expect</a>
+        <a class="btn btn-primary" href="/inquire">Ask about joining</a>
+        <a class="btn btn-ghost" href="/classes">See classes</a>
       </div>
       <ul class="hero-facts">
-        <li><strong>Mon and Wed</strong> 6:00 to 7:30 pm</li>
-        <li><strong>All ages</strong> from kids to adults</li>
+        <li><strong>Mon and Wed</strong> classes 6:00 to 7:30 pm</li>
+        <li><strong>Fri</strong> open training 6:00 to 7:30 pm</li>
+        <li><strong>Ages 13+</strong> teens and adults</li>
         <li><strong>ISKF</strong> member club</li>
       </ul>
+      </div>
+      <img class="hero-logo" src="/images/logo.png" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" width="512" height="512" />
+    </div>
+  </section>
+
+  <section class="kun-strip" aria-label="The dojo kun">
+    <div class="kun-track">
+      {[0, 1].map((copy) => (
+        <ul aria-hidden={copy ? 'true' : undefined}>
+          {DOJO_KUN.map((k) => <li><strong>{k.en}</strong><span lang="ja">一、{k.ja}</span></li>)}
+        </ul>
+      ))}
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
-      <h2>Karate for every age in Golden</h2>
-      <p class="prose">Our classes are mixed-age, so kids, teens, adults and whole families train together on the same nights. Everyone follows the same belt path, and instructors adjust each drill to the student.</p>
+      <h2>Karate for teens and adults in Golden</h2>
+      <p class="prose">Teens and adults, including parents and their teenagers, train together on the same nights. Everyone follows the same belt path, and instructors adjust each drill to the student.</p>
       <div class="grid">
-        {AGE_GUIDE.slice(0, 3).map((a) => (
+        {AGE_GUIDE.map((a) => (
           <div class="card">
             <h3>{a.group} <span class="muted">({a.ages})</span></h3>
             <p>{a.text}</p>
@@ -41,6 +71,37 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
     </div>
   </section>
 
+  <section class="video-band" aria-labelledby="rei-heading">
+    <video class="band-bg" muted loop playsinline preload="none" poster="/video/bow-poster.jpg" aria-hidden="true" data-lazy-video>
+      <source data-src="/video/bow.webm" type="video/webm" />
+      <source data-src="/video/bow.mp4" type="video/mp4" />
+    </video>
+    <div class="band-tint" aria-hidden="true"></div>
+    <div class="wrap band-inner">
+      <p class="eyebrow">Rei · 礼</p>
+      <h2 id="rei-heading">Karate begins and ends with respect</h2>
+      <p>Every class at our dojo opens and closes with a bow. It's the first of Gichin Funakoshi's twenty precepts, and it's how our students greet each other, their instructors and the training floor.</p>
+    </div>
+  </section>
+  <script>
+    // Load and play the band video only when it scrolls near the screen.
+    const v = document.querySelector('[data-lazy-video]') as HTMLVideoElement | null;
+    if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) { v.pause(); continue; }
+          if (!v.dataset.loaded) {
+            v.querySelectorAll('source').forEach((s) => (s.src = s.dataset.src!));
+            v.load();
+            v.dataset.loaded = '1';
+          }
+          v.play().catch(() => {});
+        }
+      }, { rootMargin: '200px' });
+      io.observe(v);
+    }
+  </script>
+
   <section class="section section-alt">
     <div class="wrap two-col">
       <div>
@@ -49,33 +110,51 @@ import { SITE, PRICING, AGE_GUIDE } from '../config.js';
       </div>
       <div>
         <h2>Simple, affordable pricing</h2>
-        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
-        <p>{PRICING.note}</p>
-        <a class="btn btn-primary" href="/register">Register online</a>
+        <p>{PRICING.note} Your uniform and insurance are included.</p>
+        <Prices />
+        <a class="btn btn-primary" href="/inquire">Ask about joining</a>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap two-col">
-      <div class="photo-placeholder">Photo: students training at the dojo (to be supplied by the club)</div>
+      <img src="/images/team.jpg" alt="Golden Shotokan Karate Society karate students and instructors with their medals at the dojo in Golden, BC" width="1350" height="734" loading="lazy" style="border-radius:10px" />
       <div>
         <h2>Why train with us</h2>
         <ul>
           <li><strong>Traditional Shotokan.</strong> We teach the karate of the {SITE.affiliation}, with ISKF ranks and gradings.</li>
           <li><strong>A community club.</strong> A local Golden dojo where students and families get to know each other.</li>
           <li><strong>Beginner friendly.</strong> No martial arts experience or fitness level needed to start.</li>
-          <li><strong>Affordable.</strong> Low monthly dues and no long contracts.</li>
+          <li><strong>Affordable.</strong> One fee per term covers your uniform, insurance and training.</li>
         </ul>
         <a href="/about">About our club →</a>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt">
+  <section class="section section-alt explore">
+    <div class="wrap">
+      <h2>Explore the dojo</h2>
+      <div class="grid">
+        {explore.map(([href, title, text]) => (
+          <a class="card" href={href}><h3>{title} →</h3><p>{text}</p></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" data-events-section hidden>
+    <div class="wrap">
+      <EventsList limit={3} showEmpty={false} heading="Coming up" />
+    </div>
+  </section>
+
+  <section class="section">
     <div class="wrap">
       <h2>Find us in Golden</h2>
       <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.postalCode}</p>
+      <p>Enter by the {SITE.entrance.charAt(0).toLowerCase() + SITE.entrance.slice(1)}.</p>
       <p><a href="/contact">Directions, parking and contact details →</a></p>
     </div>
   </section>

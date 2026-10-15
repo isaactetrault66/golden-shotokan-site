@@ -7,6 +7,6 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'file' },
   integrations: [
-    sitemap({ filter: (page) => !page.includes('/admin') && !page.includes('/thanks') && !page.includes('/waiver') }),
+    sitemap({ filter: (page) => !page.includes('/admin') && !page.includes('/thanks') }),
   ],
 });

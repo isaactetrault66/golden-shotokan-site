@@ -3,24 +3,25 @@ import Base from '../layouts/Base.astro';
 import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import { PRICING, AGE_GUIDE, SITE } from '../config.js';
+import Prices from '../components/Prices.astro';
 
 const course = {
   '@context': 'https://schema.org',
   '@type': 'Course',
   name: 'Shotokan Karate Classes in Golden, BC',
-  description: 'Mixed-age traditional ISKF Shotokan karate classes for kids, teens, adults and families in Golden, BC.',
+  description: 'Mixed-age traditional ISKF Shotokan karate classes for teens and adults (13+) in Golden, BC.',
   provider: { '@id': `${SITE.url}/#club` },
 };
 ---
 <Base
   title="Karate Classes and Pricing in Golden, BC"
-  description="Kids, teen, adult and family karate classes in Golden, BC. Monday and Wednesday, 6:00 to 7:30 pm. See our age guide, belt ranks and affordable monthly pricing."
+  description="Teen and adult karate classes in Golden, BC, ages 13+. Monday and Wednesday, 6:00 to 7:30 pm, plus Friday open training. See our age guide, belt ranks and affordable term pricing with uniform included."
   schema={[course]}
 >
   <section class="page-head">
     <div class="wrap">
       <h1>Karate classes in Golden, BC</h1>
-      <p>Two classes a week, Monday and Wednesday evenings, open to every age and level.</p>
+      <p>Two instructed classes a week on Monday and Wednesday evenings, plus open training on Friday. Open to teens and adults at every level.</p>
     </div>
   </section>
 
@@ -29,18 +30,19 @@ const course = {
       <div>
         <h2>Class schedule</h2>
         <Schedule />
+        <p><strong>Friday open training</strong> is time on the floor to practise on your own. There is no instruction.</p>
         <p class="muted">Classes follow the local school calendar for holiday closures. Check this page or our Google listing before holidays.</p>
       </div>
       <div class="card">
         <h2>Pricing</h2>
-        <p class="price">{PRICING.monthly}<span class="muted" style="font-size:1rem"> / month</span></p>
         <p>{PRICING.note}</p>
+        <Prices />
         <ul>
-          <li>Train at both weekly classes</li>
-          <li>Uniform (gi) not required to start</li>
-          <li>ISKF membership and grading fees are separate</li>
+          <li>Train at both weekly classes and Friday open training</li>
+          <li>Karate uniform (gi) included</li>
+          <li>Insurance included</li>
         </ul>
-        <a class="btn btn-primary" href="/register">Join now</a>
+        <a class="btn btn-primary" href="/inquire">Ask about joining</a>
       </div>
     </div>
   </section>
@@ -48,7 +50,7 @@ const course = {
   <section class="section section-alt">
     <div class="wrap">
       <h2>Who our classes are for</h2>
-      <p class="prose">Everyone trains in the same class. Instructors pair students by size and level, and give younger students shorter, game-based drills.</p>
+      <p class="prose">Everyone trains in the same class. Instructors pair students by size and level, so everyone trains safely at their own pace.</p>
       <div class="grid">
         {AGE_GUIDE.map((a) => (
           <div class="card">

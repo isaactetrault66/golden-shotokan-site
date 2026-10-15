@@ -1,14 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import JoinCallout from '../components/JoinCallout.astro';
+import { DOJO_KUN } from '../config.js';
 ---
 <Base
   title="About Our Shotokan Karate Club in Golden, BC"
-  description="Golden Shotokan Karate Association is an ISKF member club teaching traditional Shotokan karate in Golden, British Columbia. Our history, lineage and values."
+  description="Golden Shotokan Karate Society is an ISKF member club teaching traditional Shotokan karate in Golden, British Columbia. Our history, lineage and values."
 >
   <section class="page-head">
     <div class="wrap">
-      <h1>About Golden Shotokan</h1>
+      <h1>About the Society</h1>
       <p>A traditional karate club in Golden, British Columbia, and a member of the International Shotokan Karate Federation.</p>
     </div>
   </section>
@@ -24,14 +25,11 @@ import JoinCallout from '../components/JoinCallout.astro';
         <h2>The dojo kun</h2>
         <p>Every class ends with the five principles of the dojo kun:</p>
         <ol>
-          <li>Seek perfection of character</li>
-          <li>Be faithful</li>
-          <li>Endeavour to excel</li>
-          <li>Respect others</li>
-          <li>Refrain from violent behaviour</li>
+          {DOJO_KUN.map((k) => <li>{k.en}</li>)}
         </ol>
+        <p><a href="/shotokan">Our lineage, belt ranks and kata →</a></p>
       </div>
-      <div class="photo-placeholder">Photo: club group photo (to be supplied by the club)</div>
+      <img src="/images/team.jpg" alt="Golden Shotokan Karate Society karate club members in their gis at the dojo in Golden, BC" width="1350" height="734" loading="lazy" style="border-radius:10px" />
     </div>
   </section>
   <section class="section section-alt">

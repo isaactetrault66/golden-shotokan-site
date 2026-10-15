@@ -5,16 +5,18 @@ import { PRICING } from '../config.js';
 
 const faqs = [
   ['Do I need any experience?', 'No. Most people start karate as complete beginners. Instructors teach every technique from the ground up.'],
-  ['How old do you have to be?', 'Our classes are mixed-age, and kids, teens and adults all train together. Contact us if you are unsure whether your child is ready.'],
-  ['How much does it cost?', `Monthly dues are ${PRICING.monthly}. ${PRICING.note} ISKF membership and grading fees are separate.`],
-  ['Do I have to sign a contract?', 'No. There are no long-term contracts.'],
-  ['When are classes?', 'Monday and Wednesday, 6:00 to 7:30 pm. See the classes page for any holiday closures.'],
+  ['How old do you have to be?', 'Students start at age 13. Teens and adults train together in the same classes, and there is no upper age limit.'],
+  ['How much does it cost?', `Fees are per term (${PRICING.term}): ${PRICING.rates.filter((r) => r.price.startsWith('$')).map((r) => `${r.group} ${r.price}`).join(', ')}. ${PRICING.note}`],
+  ['What does the fee include?', `${PRICING.includes}. There is nothing extra to buy to get started.`],
+  ['When are classes?', 'Instructed classes are Monday and Wednesday, 6:00 to 7:30 pm. See the classes page for any holiday closures.'],
+  ['What is Friday open training?', 'Friday, 6:00 to 7:30 pm, is open training: time on the floor to practise on your own. There is no instruction.'],
+  ['How do I join?', 'Send us a message from the Get in touch page, call or email. We don\'t take registrations or payments online, so a member of the club will explain how to sign up.'],
   ['How often should I train?', 'Coming to both weekly classes gives the fastest progress, but once a week is fine to start.'],
-  ['What should I wear to my first class?', 'Comfortable athletic clothes. We train barefoot. You can buy a karate uniform (gi) later.'],
-  ['Is karate safe for kids?', 'Yes. Partner work is controlled, matched by size and level, and closely supervised. Parents are welcome to watch.'],
+  ['What should I wear to my first class?', 'Comfortable athletic clothes like a T-shirt and track pants. We train barefoot. Remove jewellery and tie back long hair. Your karate uniform (gi) is included in your fee.'],
+  ['Is karate safe for teens?', 'Yes. Partner work is controlled, matched by size and level, and closely supervised. Parents are welcome to watch.'],
   ['Can adults start at 40 or older?', 'Absolutely. Many adults start later in life and train at their own pace.'],
   ['How is Shotokan different from other styles?', 'Shotokan emphasises strong stances, long-range linear techniques and kata. It is one of the most widely practised traditional styles in the world.'],
-  ['Can parents and kids train together?', 'Yes. Because classes are mixed-age, families often train in the same class.'],
+  ['Can parents and teens train together?', 'Yes. Teens and adults share the same classes, so parents can train alongside their teenagers.'],
 ];
 
 const faqSchema = {
@@ -25,7 +27,7 @@ const faqSchema = {
 ---
 <Base
   title="Karate FAQ: Golden, BC"
-  description="Answers to common questions about Shotokan karate classes in Golden, BC: cost, ages, what to wear, contracts, safety and more."
+  description="Answers to common questions about Shotokan karate classes in Golden, BC: cost, ages, what to wear, safety and more."
   schema={[faqSchema]}
 >
   <section class="page-head">

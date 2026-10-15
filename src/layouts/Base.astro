@@ -1,4 +1,5 @@
 ---
+import BCAcknowledgement from '../components/BCAcknowledgement.astro';
 import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
 import '../styles/global.css';
 
@@ -12,8 +13,10 @@ const business = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
   '@id': `${SITE.url}/#club`,
+  logo: `${SITE.url}/images/logo.png`,
+  image: `${SITE.url}/og-image.jpg`,
   name: SITE.name,
-  description: `Traditional ${SITE.affiliation} Shotokan karate classes in ${SITE.city}, ${SITE.region} for kids, teens and adults.`,
+  description: `Traditional ${SITE.affiliation} Shotokan karate classes in ${SITE.city}, ${SITE.region} for teens and adults (13+).`,
   url: SITE.url,
   telephone: SITE.phone,
   email: SITE.email,
@@ -36,10 +39,8 @@ const schemas = [business, ...schema];
 const nav = [
   ['/classes', 'Classes'],
   ['/instructors', 'Instructors'],
-  ['/first-class', 'Your First Class'],
   ['/about', 'About'],
-  ['/faq', 'FAQ'],
-  ['/contact', 'Contact'],
+  ['/events', 'Events'],
 ];
 const path = cleanPath;
 ---
@@ -61,8 +62,9 @@ const path = cleanPath;
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={`${SITE.url}/og-image.jpg`} />
     <meta property="og:locale" content="en_CA" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#14110f" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#1d2a6b" />
     {!noindex && schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
   <body>
@@ -70,8 +72,8 @@ const path = cleanPath;
     <header class="site-header">
       <div class="wrap header-inner">
         <a class="brand" href="/">
-          <img src="/favicon.svg" alt="" width="36" height="36" />
-          <span><strong>Golden Shotokan</strong><small>Karate Association</small></span>
+          <img src="/images/logo-96.png" alt="" width="48" height="48" />
+          <span><strong>Golden Shotokan</strong><small>Karate Society · ISKF</small></span>
         </a>
         <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu" />
         <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span></label>
@@ -81,13 +83,14 @@ const path = cleanPath;
               <li><a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
             ))}
           </ul>
-          <a class="btn btn-primary" href="/register">Join now</a>
+          <a class="btn btn-primary" href="/inquire">Get in touch</a>
         </nav>
       </div>
     </header>
     <main id="main">
       <slot />
     </main>
+    <BCAcknowledgement />
     <footer class="site-footer">
       <div class="wrap footer-grid">
         <div>
@@ -100,17 +103,21 @@ const path = cleanPath;
           </address>
         </div>
         <div>
-          <p class="footer-head">Classes</p>
+          <p class="footer-head">Class times</p>
           <ul class="plain">
-            {DEFAULT_SCHEDULE.map((c) => <li>{c.day}s, {fmtRange(c.start, c.end)}</li>)}
+            {DEFAULT_SCHEDULE.map((c) => <li>{c.day}s, {fmtRange(c.start, c.end)}<br /><small>{c.name}</small></li>)}
           </ul>
-          <p class="muted">Member club of the {SITE.affiliation}</p>
+          <p class="muted">Member club of the <a href="https://www.iskf.com" rel="noopener">{SITE.affiliation}</a></p>
         </div>
         <div>
           <p class="footer-head">Links</p>
           <ul class="plain">
-            <li><a href="/register">Register</a></li>
+            <li><a href="/inquire">Get in touch</a></li>
+            <li><a href="/shotokan">Shotokan karate</a></li>
+            <li><a href="/training">Training clips</a></li>
+            <li><a href="/results">Tournament results</a></li>
             <li><a href="/faq">FAQ</a></li>
+            <li><a href="/contact">Contact and directions</a></li>
             <li><a href="/privacy">Privacy policy</a></li>
             {SITE.googleReviewUrl && <li><a href={SITE.googleReviewUrl} rel="noopener">Leave us a Google review</a></li>}
             {SITE.facebook && <li><a href={SITE.facebook} rel="noopener">Facebook</a></li>}

@@ -1,0 +1,87 @@
+---
+// Upcoming events, loaded from the admin-managed list. Renders nothing visible
+// until events load; `limit` keeps the home page teaser short.
+const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
+---
+<div data-events data-limit={limit} data-show-empty={showEmpty ? '1' : ''} hidden={!showEmpty}>
+  {heading && <h2>{heading}</h2>}
+  <div class="event-list" data-events-list>
+    {showEmpty && <p class="muted">Loading events…</p>}
+  </div>
+</div>
+<script>
+  import { fmtRange } from '../config.js';
+  const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
+  const fmtDate = (d: string) =>
+    new Date(d + 'T12:00:00Z').toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const short = (d: string) => {
+    const t = new Date(d + 'T12:00:00Z');
+    return `<b>${t.toLocaleDateString('en-CA', { month: 'short', timeZone: 'UTC' }).replace('.', '')}</b>${t.getUTCDate()}`;
+  };
+  // Title and date up front; time, place and the full write-up in the dropdown.
+  const card = (e: any, past = false) => `<details class="event-item event${past ? ' event-past' : ''}" data-kind="${esc(e.kind)}" data-date="${esc(e.date)}">
+      <summary>
+        <span class="event-date" aria-hidden="true">${short(e.date)}</span>
+        <span class="event-sum">
+          <span class="event-kind">${esc(e.kind)}</span>
+          <span class="event-title">${esc(e.title)}</span>
+          <span class="event-where">${esc(fmtDate(e.date))}${e.start_time && e.end_time ? `, ${esc(fmtRange(e.start_time, e.end_time))}` : ''}</span>
+        </span>
+        <span class="event-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="event-body">
+        <p><strong>When:</strong> ${esc(fmtDate(e.date))}${e.start_time && e.end_time ? `, ${esc(fmtRange(e.start_time, e.end_time))}` : ''}<br><strong>Where:</strong> ${esc(e.location || 'Our dojo, 818 9th Street North, Golden')}</p>
+        ${e.description ? `<p>${esc(e.description).replace(/\n/g, '<br>')}</p>` : ''}
+      </div>
+    </details>`;
+
+  // Past events, newest first, alongside any featured event that has finished.
+  function showPast(past: any[]) {
+    const list = document.querySelector<HTMLElement>('[data-past-list]');
+    if (!list) return;
+    list.insertAdjacentHTML('beforeend', past.map((e) => card(e, true)).join(''));
+    [...list.children].sort((a, b) => ((b as HTMLElement).dataset.date || '').localeCompare((a as HTMLElement).dataset.date || '')).forEach((el) => list.appendChild(el));
+    list.closest<HTMLElement>('[data-past-section]')!.hidden = !list.children.length;
+  }
+
+  fetch('/api/events')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      showPast(data?.past || []);
+      document.querySelectorAll<HTMLElement>('[data-events]').forEach((root) => {
+        const list = root.querySelector('[data-events-list]')!;
+        const showEmpty = !!root.dataset.showEmpty;
+        const upcoming = (data?.upcoming || []).slice(0, Number(root.dataset.limit));
+        if (!upcoming.length) {
+          if (showEmpty) list.innerHTML = '<p class="muted">No upcoming events right now. Regular classes run every Monday and Wednesday.</p>';
+          return;
+        }
+        root.hidden = false;
+        root.closest<HTMLElement>('[data-events-section]')?.removeAttribute('hidden');
+        list.innerHTML = upcoming.map((e: any) => card(e)).join('');
+        // Event structured data for Google (it renders JavaScript).
+        const ld = upcoming.filter((e: any) => e.kind !== 'Closure').map((e: any) => ({
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: e.title,
+          startDate: e.start_time ? `${e.date}T${e.start_time}` : e.date,
+          ...(e.end_time ? { endDate: `${e.date}T${e.end_time}` } : {}),
+          eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+          eventStatus: 'https://schema.org/EventScheduled',
+          location: { '@type': 'Place', name: e.location || 'Golden Shotokan Karate Society', address: 'Golden, BC' },
+          organizer: { '@type': 'Organization', name: 'Golden Shotokan Karate Society' },
+          ...(e.description ? { description: e.description } : {}),
+        }));
+        if (ld.length && showEmpty) {
+          const s = document.createElement('script');
+          s.type = 'application/ld+json';
+          s.textContent = JSON.stringify(ld);
+          document.head.appendChild(s);
+        }
+      });
+    })
+    .catch(() => {
+      showPast([]);
+      document.querySelectorAll<HTMLElement>('[data-events][data-show-empty="1"] [data-events-list]').forEach((l) => (l.innerHTML = '<p class="muted">Events could not be loaded. Regular classes run every Monday and Wednesday.</p>'));
+    });
+</script>

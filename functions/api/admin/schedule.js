@@ -1,6 +1,6 @@
 // PUT /api/admin/schedule  { classes: [{day,start,end,name}], notice }
 import { json } from '../../../lib/http.js';
-import { validateSchedule } from '../../../lib/registration.js';
+import { validateSchedule } from '../../../lib/forms.js';
 
 export async function onRequestPut({ request, env }) {
   const body = await request.json().catch(() => ({}));

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import EventsList from '../components/EventsList.astro';
+import WorldShotoCup from '../components/WorldShotoCup.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+---
+<Base
+  title="Karate Events, Gradings and Seminars in Golden, BC"
+  description="Upcoming gradings, seminars, tournaments and club events at Golden Shotokan Karate Society in Golden, BC, plus holiday class closures."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Events</h1>
+      <p>Belt gradings, ISKF seminars, tournaments, club events and holiday closures. Tap an event for the full details.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <p class="event-links"><a href="/training">Watch training clips</a> · <a href="/results">Tournament results</a></p>
+      <div class="event-list">
+        <WorldShotoCup />
+      </div>
+      <h2 class="event-list-head">Club events</h2>
+      <EventsList />
+      <div data-past-section hidden>
+        <h2 class="event-list-head">Past events</h2>
+        <div class="event-list" data-past-list></div>
+      </div>
+    </div>
+  </section>
+  <JoinCallout />
+</Base>

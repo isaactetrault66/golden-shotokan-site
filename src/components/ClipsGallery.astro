@@ -1,0 +1,52 @@
+---
+// Training clips from admin. With `competition`, shows only that event's clips;
+// without it, groups every clip by competition.
+const { competition = '', empty = 'No training clips yet.' } = Astro.props;
+---
+<div class="clips" data-clips data-competition={competition} data-empty={empty}>
+  <p class="muted">Loading clips…</p>
+</div>
+<script>
+  import { parseVideoUrl } from '../../lib/forms.js';
+  import { TRAINING_CLIPS } from '../config.js';
+  const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
+  const fmtDate = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+  // YouTube shows a thumbnail first and only loads the player when pressed.
+  function player(c: any) {
+    if (c.file) return `<video controls playsinline preload="none" poster="/video/training/${esc(c.file)}.jpg" src="/video/training/${esc(c.file)}.mp4"></video>`;
+    const v = parseVideoUrl(c.url);
+    if (!v) return '';
+    if (v.kind === 'youtube')
+      return `<button class="clip-play" type="button" data-yt="${esc(v.id)}" aria-label="Play ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="" loading="lazy" /><span class="clip-btn" aria-hidden="true"></span></button>`;
+    if (v.kind === 'vimeo')
+      return `<iframe src="https://player.vimeo.com/video/${esc(v.id)}?dnt=1" title="${esc(c.title)}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+    return `<video controls playsinline preload="metadata" src="${esc(v.src)}"></video>`;
+  }
+  const card = (c: any) => `<figure class="clip"><div class="clip-media">${player(c)}</div><figcaption><strong>${esc(c.title)}</strong>${c.recorded_on ? `<span class="muted">${esc(fmtDate(c.recorded_on))}</span>` : ''}</figcaption></figure>`;
+
+  document.querySelectorAll<HTMLElement>('[data-clips]').forEach(async (root) => {
+    const comp = root.dataset.competition || '';
+    let clips: any[] = TRAINING_CLIPS.filter((c) => !comp || c.competition === comp);
+    try {
+      const r = await fetch('/api/clips' + (comp ? `?competition=${encodeURIComponent(comp)}` : ''));
+      if (r.ok) clips = [...((await r.json()).clips || []), ...clips];
+    } catch {}
+    clips.sort((a, b) => (b.recorded_on || '').localeCompare(a.recorded_on || ''));
+    if (!clips.length) { root.innerHTML = `<p class="muted">${esc(root.dataset.empty)}</p>`; return; }
+    if (comp) root.innerHTML = `<div class="clip-grid">${clips.map(card).join('')}</div>`;
+    else {
+      const groups = new Map<string, any[]>();
+      for (const c of clips) { const k = c.competition || 'Club training'; groups.set(k, [...(groups.get(k) || []), c]); }
+      root.innerHTML = [...groups].map(([k, list]) => `<section class="clip-group"><h2>${esc(k)}</h2><div class="clip-grid">${list.map(card).join('')}</div></section>`).join('');
+    }
+    root.querySelectorAll<HTMLButtonElement>('[data-yt]').forEach((b) => b.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0`;
+      f.title = b.getAttribute('aria-label') || 'Training clip';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      b.replaceWith(f);
+    }));
+  });
+</script>

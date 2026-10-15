@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import ResultsBoard from '../components/ResultsBoard.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+---
+<Base
+  title="Tournament Results | Golden Shotokan Karate Society"
+  description="Tournament results for Golden Shotokan Karate Society members at provincial, national and ISKF world competitions."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Tournament results</h1>
+      <p>How our members placed at provincial, national and world ISKF tournaments.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <ResultsBoard empty="Results will be posted here after our next tournament." />
+      <p class="event-links" style="margin-top:40px"><a href="/training">Watch training clips</a> · <a href="/events">Upcoming events</a></p>
+    </div>
+  </section>
+  <JoinCallout />
+</Base>

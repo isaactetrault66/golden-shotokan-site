@@ -1,39 +1,47 @@
-# Golden Shotokan Karate Association website
+# Golden Shotokan Karate Society website
 
-Website for the Golden Shotokan Karate Association, an ISKF club in Golden, BC.
-Fast static pages for local SEO, an online registration form, and a private
-admin area where the club sees and manages every registration.
+Website for the Golden Shotokan Karate Society, an ISKF club in Golden, BC.
+Fast static pages for local SEO, an inquiry form, and a private admin area
+where the club sees and manages every inquiry. The club does not take
+registrations or payments online.
 
 - **Site:** [Astro](https://astro.build) static pages in `src/pages`
 - **Hosting:** Cloudflare Pages (free tier)
-- **Registrations:** Cloudflare D1 database (`db/schema.sql`), Pages Functions in `functions/`
-- **Emails:** [Resend](https://resend.com): a "New registration" email to the club and a welcome email to the family
+- **Inquiries:** Cloudflare D1 database (`db/schema.sql`), Pages Functions in `functions/`
+- **Emails:** [Resend](https://resend.com): a "New inquiry" email to the club (reply to it to answer the sender) and a "thanks for your message" copy to the sender
 - **Admin login:** Cloudflare Access (email one-time code for named staff)
 - **Spam:** honeypot field + Cloudflare Turnstile
 
-## How a registration flows
+## How an inquiry flows
 
-1. A family submits `/register`.
-2. `functions/api/register.js` validates it (`lib/registration.js`) and saves it to D1 **first**.
-3. It then emails the club (`CLUB_EMAIL`) and the family. Email success or failure is recorded on the row, so a failed email never loses a registration.
-4. Staff open `/admin` to see it, change its status (New, Contacted, First class done, Enrolled, Not continuing), add notes, search, filter, export to CSV, or delete it (privacy requests).
-5. Staff can also edit class times and a schedule notice under **Class schedule**. The public pages show the edited schedule.
+1. Someone submits the form at `/inquire` (old `/register` links redirect there, see `public/_redirects`).
+2. `functions/api/inquire.js` validates it (`lib/forms.js`) and saves it to D1 **first**.
+3. It then emails the club (`CLUB_EMAIL`) and the sender. Email success or failure is recorded on the row, so a failed email never loses an inquiry.
+4. Staff open `/admin` to see it, change its status (New, Replied, Joined, Closed), add notes, search, filter, export to CSV, or delete it (privacy requests).
+5. Staff can also edit class times and a schedule notice under **Class schedule**, and add gradings, seminars, tournaments, club events and holiday closures under **Events**. The public pages show them within about 5 minutes.
+6. **Training clips:** upload the video to YouTube (unlisted is fine) or Vimeo, then paste the link under **Training clips** in admin. Pick a tournament to show the clip under that event too. Clips appear on /training.
+7. **Results:** add one line per athlete per event under **Results**. They appear on /results with a medal count, and under the tournament on the Events page.
+
+Repeat messages are limited to 5 an hour per device; only a salted hash of the IP address is stored.
 
 ## Content still needed from the club
 
 Search the code for `TODO`. Most live in **`src/config.js`**:
 
-- [ ] Street address, postal code, phone, email, map location (`geo`)
+- [x] Street address, postal code, phone, email (from the club Facebook page)
+- [ ] Exact map pin for the dojo (`SITE.geo`)
 - [ ] Domain name (`SITE.url`, also in `astro.config.mjs` via config, `public/robots.txt`, `wrangler.toml`)
-- [ ] Monthly price (`PRICING.monthly`)
-- [ ] Age ranges in `AGE_GUIDE`
-- [ ] Instructors: names, ISKF ranks, bios, photos (`src/pages/instructors.astro`)
+- [x] Term prices for 13 to 17 and 18+ (`PRICING`)
+- [x] Minimum age 13 (`MIN_AGE` in `lib/forms.js`)
+- [ ] Instructor bio and photo for Sensei Tyler Tetrault, plus any assistant instructors (`src/pages/instructors.astro`)
 - [ ] Club history (`src/pages/about.astro`)
-- [ ] Parking and entrance notes (`src/pages/contact.astro`)
-- [ ] Real liability waiver text (`src/pages/waiver.astro`), and review the draft privacy policy (`src/pages/privacy.astro`)
-- [ ] 15 to 30 real photos to replace the striped photo placeholders, plus `public/og-image.jpg` (1200x630) for link previews
-- [ ] Google review link, Facebook, Instagram (`SITE.googleReviewUrl` etc.)
-- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; uniform not required to start; ISKF membership and grading fees are separate; no contracts; instructors teaching kids hold criminal record checks and first aid
+- [x] Entrance: east side door of the Golden Child Daycare building
+- [ ] Review the draft privacy policy (`src/pages/privacy.astro`)
+- [ ] 15 to 30 real photos to replace the striped photo placeholders (a link-preview image is already in `public/og-image.jpg`)
+- [ ] Google review link and Instagram (`SITE.googleReviewUrl`, `SITE.instagram`). Facebook is set to the club page.
+- [ ] Confirm the belt colours on the Shotokan page (`src/pages/shotokan.astro`; kata follow the ISKF syllabus, colours vary between dojos), and who Sensei Tyler trained under, to complete the lineage
+- [ ] BC Community Gaming Grant: the acknowledgement shows above the footer on every page (`src/components/BCAcknowledgement.astro`). If the grant package includes the official BC logo, add it there.
+- [ ] Confirm these statements, which were written as reasonable defaults: holiday closures follow the school calendar; instructors teaching under-18 students hold criminal record checks and first aid
 
 ## Run it locally
 
@@ -63,22 +71,22 @@ npx wrangler pages dev dist               # http://localhost:8788, admin at /adm
    | Name | Value |
    | --- | --- |
    | `RESEND_API_KEY` | from Resend |
-   | `CLUB_EMAIL` | address(es) that receive new registrations, comma separated |
-   | `FROM_EMAIL` | e.g. `Golden Shotokan <register@goldenshotokan.ca>` (domain verified in Resend) |
-   | `SITE_URL` | `https://goldenshotokan.ca` |
+   | `CLUB_EMAIL` | address(es) that receive new inquiries, comma separated |
+   | `FROM_EMAIL` | e.g. `Golden Shotokan Karate Society <info@iskfgolden.ca>` (domain verified in Resend) |
+   | `SITE_URL` | `https://iskfgolden.ca` |
    | `TURNSTILE_SECRET` | from Turnstile |
-   | `ACCESS_TEAM_DOMAIN` | e.g. `goldenshotokan.cloudflareaccess.com` |
+   | `ACCESS_TEAM_DOMAIN` | e.g. `iskfgolden.cloudflareaccess.com` |
    | `ACCESS_AUD` | the Access application's Audience (AUD) tag |
 
 7. **Admin login (Cloudflare Access):** Zero Trust → Access → Applications → Add → Self-hosted.
    Domain: your site, paths `admin` and `api/admin`. Policy: Allow, emails of the 1 to 3 staff.
    Login method: One-time PIN. Copy the application's AUD tag into `ACCESS_AUD`.
    The admin API also verifies the Access token itself, so it stays closed even if the policy is misconfigured.
-8. **Custom domain:** Pages → Custom domains → add `goldenshotokan.ca`.
+8. **Custom domain:** Pages → Custom domains → add `iskfgolden.ca`.
 
 ## After launch (local SEO for Golden, BC)
 
-- Submit `https://goldenshotokan.ca/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
-- Claim the Google Business Profile: category "Karate school", same name, address and phone as `src/config.js`, hours Mon and Wed 6:00 to 7:30 pm, photos, website link.
+- Submit `https://iskfgolden.ca/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools.
+- Claim the Google Business Profile: category "Karate school", same name, address and phone as `src/config.js`, hours Mon, Wed and Fri 6:00 to 7:30 pm, photos, website link.
 - List the club on Apple Maps, Bing Places, Yellow Pages Canada, Facebook, the Kicking Horse Country Chamber, Tourism Golden and the ISKF dojo directory, always with identical name, address and phone.
 - Ask current families for Google reviews.
