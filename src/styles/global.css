@@ -182,3 +182,14 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .bc-ack-text { margin: 0; font-family: var(--serif); font-size: clamp(1.1rem, 2.4vw, 1.4rem); line-height: 1.35; color: var(--navy); }
 .bc-ack-mountains { display: block; width: 100%; height: 150px; margin-top: -24px; }
 @media (max-width: 600px) { .bc-ack-card { flex-direction: column; align-items: flex-start; } .bc-ack-mountains { height: 110px; margin-top: -10px; } }
+
+/* Homepage video band (club members bowing in), tinted navy */
+.video-band { position: relative; overflow: hidden; isolation: isolate; background: #1d2a6b; color: #fff; min-height: 460px; display: flex; align-items: center; }
+.video-band .band-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; mix-blend-mode: luminosity; opacity: .7; }
+.video-band .band-tint { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(22,32,79,.95) 0%, rgba(22,32,79,.8) 38%, rgba(29,42,107,.25) 75%, rgba(29,42,107,.45) 100%); }
+.band-inner { width: 100%; padding-top: 72px; padding-bottom: 72px; }
+.band-inner > * { max-width: 30em; }
+.band-inner .eyebrow { color: var(--eyebrow); text-transform: uppercase; letter-spacing: .12em; font-size: .85rem; font-weight: 600; }
+.band-inner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+.band-inner p:last-child { color: var(--hero-muted); font-size: 1.1rem; margin: 0; }
+@media (max-width: 700px) { .video-band .band-tint { background: linear-gradient(180deg, rgba(22,32,79,.75), rgba(22,32,79,.9)); } }

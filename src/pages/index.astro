@@ -71,6 +71,37 @@ const explore = [
     </div>
   </section>
 
+  <section class="video-band" aria-labelledby="rei-heading">
+    <video class="band-bg" muted loop playsinline preload="none" poster="/video/bow-poster.jpg" aria-hidden="true" data-lazy-video>
+      <source data-src="/video/bow.webm" type="video/webm" />
+      <source data-src="/video/bow.mp4" type="video/mp4" />
+    </video>
+    <div class="band-tint" aria-hidden="true"></div>
+    <div class="wrap band-inner">
+      <p class="eyebrow">Rei · 礼</p>
+      <h2 id="rei-heading">Karate begins and ends with respect</h2>
+      <p>Every class at our dojo opens and closes with a bow. It's the first of Gichin Funakoshi's twenty precepts, and it's how our students greet each other, their instructors and the training floor.</p>
+    </div>
+  </section>
+  <script>
+    // Load and play the band video only when it scrolls near the screen.
+    const v = document.querySelector('[data-lazy-video]') as HTMLVideoElement | null;
+    if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) { v.pause(); continue; }
+          if (!v.dataset.loaded) {
+            v.querySelectorAll('source').forEach((s) => (s.src = s.dataset.src!));
+            v.load();
+            v.dataset.loaded = '1';
+          }
+          v.play().catch(() => {});
+        }
+      }, { rootMargin: '200px' });
+      io.observe(v);
+    }
+  </script>
+
   <section class="section section-alt">
     <div class="wrap two-col">
       <div>
