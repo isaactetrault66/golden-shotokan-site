@@ -5,7 +5,7 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
 ---
 <div data-events data-limit={limit} data-show-empty={showEmpty ? '1' : ''} hidden={!showEmpty}>
   {heading && <h2>{heading}</h2>}
-  <div class="grid" data-events-list>
+  <div class="event-list" data-events-list>
     {showEmpty && <p class="muted">Loading events…</p>}
   </div>
   <div data-events-recent></div>
@@ -15,12 +15,26 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
   const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
   const fmtDate = (d: string) =>
     new Date(d + 'T12:00:00Z').toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-  const card = (e: any) => `<article class="card event" data-kind="${esc(e.kind)}">
-      <p class="event-kind">${esc(e.kind)}</p>
-      <h3>${esc(e.title)}</h3>
-      <p><strong>${esc(fmtDate(e.date))}</strong>${e.start_time && e.end_time ? `<br>${esc(fmtRange(e.start_time, e.end_time))}` : ''}${e.location ? `<br>${esc(e.location)}` : ''}</p>
-      ${e.description ? `<p>${esc(e.description).replace(/\n/g, '<br>')}</p>` : ''}
-    </article>`;
+  const short = (d: string) => {
+    const t = new Date(d + 'T12:00:00Z');
+    return `<b>${t.toLocaleDateString('en-CA', { month: 'short', timeZone: 'UTC' }).replace('.', '')}</b>${t.getUTCDate()}`;
+  };
+  // Title and date up front; time, place and the full write-up in the dropdown.
+  const card = (e: any) => `<details class="event-item event" data-kind="${esc(e.kind)}">
+      <summary>
+        <span class="event-date" aria-hidden="true">${short(e.date)}</span>
+        <span class="event-sum">
+          <span class="event-kind">${esc(e.kind)}</span>
+          <span class="event-title">${esc(e.title)}</span>
+          <span class="event-where">${esc(fmtDate(e.date))}${e.start_time && e.end_time ? `, ${esc(fmtRange(e.start_time, e.end_time))}` : ''}</span>
+        </span>
+        <span class="event-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="event-body">
+        <p><strong>When:</strong> ${esc(fmtDate(e.date))}${e.start_time && e.end_time ? `, ${esc(fmtRange(e.start_time, e.end_time))}` : ''}<br><strong>Where:</strong> ${esc(e.location || 'Our dojo, 818 9th Street North, Golden')}</p>
+        ${e.description ? `<p>${esc(e.description).replace(/\n/g, '<br>')}</p>` : ''}
+      </div>
+    </details>`;
 
   fetch('/api/events')
     .then((r) => (r.ok ? r.json() : null))

@@ -11,13 +11,16 @@ import JoinCallout from '../components/JoinCallout.astro';
   <section class="page-head">
     <div class="wrap">
       <h1>Events</h1>
-      <p>Belt gradings, ISKF seminars, tournaments, club events and holiday closures.</p>
+      <p>Belt gradings, ISKF seminars, tournaments, club events and holiday closures. Tap an event for the full details.</p>
     </div>
   </section>
   <section class="section">
     <div class="wrap">
-      <WorldShotoCup />
-      <h2>Club events</h2>
+      <p class="event-links"><a href="/training">Watch training clips</a> · <a href="/results">Tournament results</a></p>
+      <div class="event-list">
+        <WorldShotoCup />
+      </div>
+      <h2 class="event-list-head">Club events</h2>
       <EventsList />
     </div>
   </section>

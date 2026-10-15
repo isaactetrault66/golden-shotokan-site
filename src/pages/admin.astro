@@ -16,7 +16,7 @@ import '../styles/global.css';
     .bar { background: var(--ink); color: #fff; }
     .bar .wrap { display: flex; justify-content: space-between; align-items: center; min-height: 56px; gap: 12px; flex-wrap: wrap; }
     .bar a { color: #fff; }
-    .tabs { display: flex; gap: 8px; margin: 20px 0; }
+    .tabs { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
     .tabs button { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font: inherit; cursor: pointer; }
     .tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
     .counts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -61,6 +61,8 @@ import '../styles/global.css';
       <button role="tab" aria-selected="true" data-tab="regs">Inquiries</button>
       <button role="tab" aria-selected="false" data-tab="sched">Class schedule</button>
       <button role="tab" aria-selected="false" data-tab="events">Events</button>
+      <button role="tab" aria-selected="false" data-tab="clips">Training clips</button>
+      <button role="tab" aria-selected="false" data-tab="results">Results</button>
     </div>
     <div class="form-msg" id="err" role="alert"></div>
 
@@ -103,7 +105,7 @@ import '../styles/global.css';
           </div>
           <div class="row-2">
             <label>Date *<input type="date" name="date" required /></label>
-            <label>Location <span class="hint">Leave empty for the usual dojo</span><input name="location" maxlength="160" /></label>
+            <label>Location (optional)<input name="location" maxlength="160" placeholder="Leave empty for the usual dojo" /></label>
           </div>
           <div class="row-2">
             <label>Start time<input type="time" name="start_time" /></label>
@@ -125,6 +127,70 @@ import '../styles/global.css';
         <div class="empty" id="ev-empty" hidden>No events yet.</div>
       </div>
     </section>
+
+    <section id="tab-clips" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 data-title>Add a training clip</h2>
+        <p class="muted">Upload the video to YouTube (unlisted is fine) or Vimeo, then paste the link here. Clips show on the Training clips page, and under their tournament on the Events page.</p>
+        <form class="stack" style="gap:14px" data-form>
+          <div class="row-2">
+            <label>Title *<input name="title" required maxlength="120" placeholder="e.g. Team kata practice" /></label>
+            <label>Video link *<input name="url" required maxlength="500" type="url" placeholder="https://youtu.be/..." /></label>
+          </div>
+          <div class="row-2">
+            <label>Tournament (optional)<input name="competition" maxlength="120" list="competitions" placeholder="Leave empty for general training" /></label>
+            <label>Recorded on<input type="date" name="recorded_on" /></label>
+          </div>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" data-save>Add clip</button>
+            <button class="btn btn-ghost btn-small" type="button" data-cancel hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Recorded</th><th>Clip</th><th>Tournament</th><th>Shown</th><th></th></tr></thead>
+          <tbody data-rows></tbody>
+        </table>
+        <div class="empty" data-empty hidden>No clips yet.</div>
+      </div>
+    </section>
+
+    <section id="tab-results" hidden>
+      <div class="card" style="margin-bottom:20px">
+        <h2 data-title>Add a result</h2>
+        <p class="muted">One line per athlete per event. Results show on the Tournament results page with a medal count, and under their tournament on the Events page.</p>
+        <form class="stack" style="gap:14px" data-form>
+          <div class="row-2">
+            <label>Tournament *<input name="competition" required maxlength="120" list="competitions" /></label>
+            <label>Tournament date *<input type="date" name="competition_date" required /></label>
+          </div>
+          <div class="row-2">
+            <label>Athlete *<input name="athlete" required maxlength="120" /></label>
+            <label>Division (optional)<input name="division" maxlength="120" placeholder="e.g. Men 45 to 54, black belt" /></label>
+          </div>
+          <div class="row-2">
+            <label>Event<select name="event_type"></select></label>
+            <label>Place<select name="place"></select></label>
+          </div>
+          <label>Note (optional)<input name="note" maxlength="300" placeholder="e.g. kata performed" /></label>
+          <label class="check"><input type="checkbox" name="published" checked /> <span>Show on the website</span></label>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="submit" data-save>Add result</button>
+            <button class="btn btn-ghost btn-small" type="button" data-cancel hidden>Cancel edit</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Date</th><th>Tournament</th><th>Athlete</th><th>Event</th><th>Place</th><th>Shown</th><th></th></tr></thead>
+          <tbody data-rows></tbody>
+        </table>
+        <div class="empty" data-empty hidden>No results yet.</div>
+      </div>
+    </section>
+    <datalist id="competitions"></datalist>
   </main>
 
   <dialog id="dlg">
@@ -142,7 +208,7 @@ import '../styles/global.css';
   <div class="toast" id="toast"></div>
 
   <script>
-    import { STATUSES, INTERESTS, DAYS, EVENT_KINDS } from '../../lib/forms.js';
+    import { STATUSES, INTERESTS, DAYS, EVENT_KINDS, RESULT_EVENTS, PLACES } from '../../lib/forms.js';
 
     const $ = (id) => document.getElementById(id)!;
     const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
@@ -249,8 +315,12 @@ import '../styles/global.css';
       $('tab-regs').hidden = tab !== 'regs';
       $('tab-sched').hidden = tab !== 'sched';
       $('tab-events').hidden = tab !== 'events';
+      $('tab-clips').hidden = tab !== 'clips';
+      $('tab-results').hidden = tab !== 'results';
       if (tab === 'sched') loadSchedule();
       if (tab === 'events') loadEvents();
+      if (tab === 'clips') clipsEditor.load();
+      if (tab === 'results') resultsEditor.load();
     }));
 
     // Schedule editor
@@ -330,6 +400,79 @@ import '../styles/global.css';
         toast(editingId ? 'Event saved' : 'Event added'); showErr('');
         resetEventForm(); loadEvents();
       } catch (e) { showErr((e as Error).message); }
+    });
+
+
+    // Training clips and results editors: a form above a list, edit and delete per row.
+    const competitions = new Set<string>(['2026 ISKF World Shoto Cup']);
+    const refreshCompetitions = () => ($('competitions').innerHTML = [...competitions].map((c) => `<option value="${esc(c)}"></option>`).join(''));
+    refreshCompetitions();
+    function listEditor(o: { section: string; endpoint: string; key: string; noun: string; fields: string[]; row: (x: any) => string }) {
+      const root = $(o.section);
+      const form = root.querySelector('[data-form]') as HTMLFormElement;
+      const q = (sel: string) => root.querySelector(sel) as HTMLElement;
+      let items: any[] = [];
+      let editing: number | null = null;
+      const reset = () => {
+        form.reset(); editing = null;
+        q('[data-title]').textContent = `Add a ${o.noun}`;
+        q('[data-save]').textContent = `Add ${o.noun}`;
+        q('[data-cancel]').hidden = true;
+      };
+      async function load() {
+        try {
+          items = (await api(o.endpoint))[o.key];
+          items.forEach((x) => x.competition && competitions.add(x.competition));
+          refreshCompetitions();
+          q('[data-empty]').hidden = items.length > 0;
+          q('[data-rows]').innerHTML = items.map((x) => `<tr>${o.row(x)}<td>${x.published ? 'Yes' : 'Hidden'}</td><td><button class="btn btn-ghost btn-small" data-edit="${x.id}" type="button">Edit</button> <button class="btn btn-danger btn-small" data-del="${x.id}" type="button">Delete</button></td></tr>`).join('');
+          root.querySelectorAll<HTMLElement>('[data-edit]').forEach((b) => b.addEventListener('click', () => {
+            const x = items.find((i) => i.id === Number(b.dataset.edit));
+            for (const k of o.fields) (form.elements.namedItem(k) as HTMLInputElement).value = x[k] || '';
+            (form.elements.namedItem('published') as HTMLInputElement).checked = !!x.published;
+            editing = x.id;
+            q('[data-title]').textContent = `Edit ${o.noun}`;
+            q('[data-save]').textContent = 'Save changes';
+            q('[data-cancel]').hidden = false;
+            form.scrollIntoView({ behavior: 'smooth' });
+          }));
+          root.querySelectorAll<HTMLElement>('[data-del]').forEach((b) => b.addEventListener('click', async () => {
+            if (b.dataset.confirm !== 'yes') { b.dataset.confirm = 'yes'; b.textContent = 'Click again'; return; }
+            try { await api(`${o.endpoint}/${b.dataset.del}`, { method: 'DELETE' }); toast(`Deleted`); load(); } catch (e) { showErr((e as Error).message); }
+          }));
+        } catch (e) { showErr((e as Error).message); }
+      }
+      q('[data-cancel]').addEventListener('click', reset);
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        const fd = new FormData(form);
+        const body = { ...Object.fromEntries(fd), published: fd.get('published') === 'on' };
+        try {
+          if (editing) await api(`${o.endpoint}/${editing}`, { method: 'PUT', body: JSON.stringify(body) });
+          else await api(o.endpoint, { method: 'POST', body: JSON.stringify(body) });
+          toast(editing ? 'Saved' : 'Added'); showErr('');
+          // Keep the tournament filled in so several results can be added in a row.
+          const keep = editing ? null : { competition: fd.get('competition'), competition_date: fd.get('competition_date') };
+          reset();
+          if (keep) for (const [k, v] of Object.entries(keep)) { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && v) el.value = String(v); }
+          load();
+        } catch (e) { showErr((e as Error).message); }
+      });
+      return { load };
+    }
+    const clipsEditor = listEditor({
+      section: 'tab-clips', endpoint: '/api/admin/clips', key: 'clips', noun: 'clip',
+      fields: ['title', 'url', 'competition', 'recorded_on'],
+      row: (c) => `<td>${esc(c.recorded_on || '')}</td><td><strong>${esc(c.title)}</strong><br><a href="${esc(c.url)}" target="_blank" rel="noopener" class="muted">Open link</a></td><td>${esc(c.competition || 'General training')}</td>`,
+    });
+    const resultsForm = $('tab-results').querySelector('[data-form]') as HTMLFormElement;
+    (resultsForm.elements.namedItem('event_type') as HTMLSelectElement).innerHTML = RESULT_EVENTS.map((k) => `<option>${esc(k)}</option>`).join('');
+    (resultsForm.elements.namedItem('place') as HTMLSelectElement).innerHTML = PLACES.map((k) => `<option>${esc(k)}</option>`).join('');
+    const resultsEditor = listEditor({
+      section: 'tab-results', endpoint: '/api/admin/results', key: 'results', noun: 'result',
+      fields: ['competition', 'competition_date', 'athlete', 'division', 'event_type', 'place', 'note'],
+      row: (r) => `<td>${esc(r.competition_date)}</td><td>${esc(r.competition)}</td><td><strong>${esc(r.athlete)}</strong></td><td>${esc(r.event_type)}${r.division ? `<br><span class="muted">${esc(r.division)}</span>` : ''}</td><td>${esc(r.place)}</td>`,
     });
 
     api('/api/admin/me').then((d) => ($('who').textContent = d.email)).catch(() => {});

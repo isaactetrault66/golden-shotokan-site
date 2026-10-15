@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import ClipsGallery from '../components/ClipsGallery.astro';
+import JoinCallout from '../components/JoinCallout.astro';
+---
+<Base
+  title="Karate Training Clips | Golden, BC"
+  description="Watch Golden Shotokan Karate Society members training kata and kumite in Golden, BC as they prepare for ISKF tournaments."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Training clips</h1>
+      <p>Watch our team training kata and kumite at the dojo in Golden as they get ready for competition.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <ClipsGallery empty="Training clips will be posted here soon." />
+      <p class="event-links" style="margin-top:40px"><a href="/results">See our tournament results</a> · <a href="/events">Upcoming events</a></p>
+    </div>
+  </section>
+  <JoinCallout />
+</Base>

@@ -19,6 +19,8 @@ registrations or payments online.
 3. It then emails the club (`CLUB_EMAIL`) and the sender. Email success or failure is recorded on the row, so a failed email never loses an inquiry.
 4. Staff open `/admin` to see it, change its status (New, Replied, Joined, Closed), add notes, search, filter, export to CSV, or delete it (privacy requests).
 5. Staff can also edit class times and a schedule notice under **Class schedule**, and add gradings, seminars, tournaments, club events and holiday closures under **Events**. The public pages show them within about 5 minutes.
+6. **Training clips:** upload the video to YouTube (unlisted is fine) or Vimeo, then paste the link under **Training clips** in admin. Pick a tournament to show the clip under that event too. Clips appear on /training.
+7. **Results:** add one line per athlete per event under **Results**. They appear on /results with a medal count, and under the tournament on the Events page.
 
 Repeat messages are limited to 5 an hour per device; only a salted hash of the IP address is stored.
 

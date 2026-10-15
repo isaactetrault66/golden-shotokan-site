@@ -206,8 +206,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 @media (max-width: 760px) { .kata-demo { grid-template-columns: 1fr; } .kata-demo video { max-width: 320px; margin: 0 auto; } }
 
 /* Featured ISKF event on the Events page */
-.feature-event { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; }
-.feature-head h2 { margin: 0 0 .2em; }
+.feature-event { border-top: 4px solid var(--red); }
 .feature-meta { font-size: 1.1rem; }
 .feature-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.2em; }
 .feature-grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
@@ -224,6 +223,62 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .feature-foot { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
 .small { font-size: .9rem; }
 @media (max-width: 560px) {
-  .feature-event { padding: 22px; }
   .feature-schedule dd { grid-template-columns: 1fr; gap: 0; }
 }
+
+/* Events as dropdowns: title and date up front, details inside */
+.event-list { display: grid; gap: 14px; }
+.event-list-head { margin-top: 48px; }
+.event-links { font-weight: 600; }
+.event-item { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.event-item > summary { display: flex; align-items: center; gap: 18px; padding: 18px 22px; cursor: pointer; list-style: none; }
+.event-item > summary::-webkit-details-marker { display: none; }
+.event-item > summary:hover .event-title { color: var(--red); }
+.event-item > summary:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; border-radius: var(--radius); }
+.event-date { flex: none; width: 4.6em; padding: 8px 4px; border-radius: 10px; background: var(--ink); color: #fff; text-align: center; font-family: var(--serif); font-size: 1.25rem; font-weight: 700; line-height: 1.1; }
+.event-date b { display: block; font-family: var(--sans, inherit); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+.event-sum { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.event-sum .event-kind { margin: 0 0 .15em; }
+.event-title { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; line-height: 1.25; color: var(--ink); }
+.event-where { color: var(--muted); margin-top: .2em; }
+.event-toggle { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); position: relative; }
+.event-toggle::before { content: ""; position: absolute; left: 50%; top: 45%; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translate(-50%, -50%) rotate(45deg); transition: transform .2s; }
+.event-item[open] .event-toggle::before { transform: translate(-50%, -20%) rotate(-135deg); }
+.event-body { padding: 4px 0 24px; margin: 0 22px; border-top: 1px solid var(--line); }
+.event-body > :first-child { margin-top: 1em; }
+.feature-event .event-body { padding-top: 8px; }
+.feature-event .event-date { background: var(--red); }
+@media (max-width: 560px) {
+  .event-item > summary { gap: 12px; padding: 14px; }
+  .event-date { width: 3.9em; font-size: 1.05rem; }
+  .event-title { font-size: 1.12rem; }
+  .event-body { margin: 0 14px; }
+}
+
+/* Training clips */
+.clip-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.clip-group + .clip-group { margin-top: 40px; }
+.clip { margin: 0; }
+.clip-media { aspect-ratio: 16 / 9; background: #0f1738; border-radius: var(--radius); overflow: hidden; }
+.clip-media iframe, .clip-media video, .clip-play { width: 100%; height: 100%; border: 0; display: block; }
+.clip-media video { object-fit: contain; background: #0f1738; }
+.clip-play { position: relative; padding: 0; background: none; cursor: pointer; }
+.clip-play img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.clip-btn { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(193, 39, 45, .92); box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+.clip-btn::after { content: ""; position: absolute; left: 54%; top: 50%; transform: translate(-50%, -50%); border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
+.clip-play:hover .clip-btn, .clip-play:focus-visible .clip-btn { background: var(--red-dark); }
+.clip figcaption { margin-top: 10px; display: flex; flex-direction: column; }
+
+/* Tournament results */
+.results-group + .results-group { margin-top: 48px; }
+.results-group h2 { margin-bottom: .1em; }
+.tally { display: flex; flex-wrap: wrap; gap: 8px; }
+.tally-item, .place { display: inline-block; padding: 3px 12px; border-radius: 999px; font-weight: 700; font-size: .9rem; background: var(--alt); color: var(--ink); }
+[data-medal="gold"] { background: #f3d77a; color: #4a3a00; }
+[data-medal="silver"] { background: #d9dde6; color: #2f3646; }
+[data-medal="bronze"] { background: #e4b48c; color: #4d2a0d; }
+.results-table { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.results-table table { width: 100%; border-collapse: collapse; }
+.results-table th, .results-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.results-table thead th { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.results-table tbody tr:last-child td { border-bottom: 0; }

@@ -56,3 +56,29 @@ WHERE (SELECT COUNT(*) FROM schedule) = 1;
 INSERT INTO schedule (sort, day, start, end, name)
 SELECT 3, 'Friday', '18:00', '19:30', 'Open training (no instruction)'
 WHERE (SELECT COUNT(*) FROM schedule) = 2;
+
+-- Training clips (YouTube, Vimeo or video file links) shown on /training.
+CREATE TABLE IF NOT EXISTS clips (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  title TEXT NOT NULL,
+  url TEXT NOT NULL,
+  competition TEXT,
+  recorded_on TEXT,
+  published INTEGER NOT NULL DEFAULT 1
+);
+
+-- Club members' tournament results shown on /results.
+CREATE TABLE IF NOT EXISTS results (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  competition TEXT NOT NULL,
+  competition_date TEXT NOT NULL,
+  athlete TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  division TEXT,
+  place TEXT NOT NULL,
+  note TEXT,
+  published INTEGER NOT NULL DEFAULT 1
+);
+CREATE INDEX IF NOT EXISTS idx_results_comp ON results (competition_date, competition);

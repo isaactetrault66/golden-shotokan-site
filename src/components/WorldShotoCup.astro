@@ -1,7 +1,13 @@
 ---
 // Featured ISKF event. Details from worldshotocup.mx and iskf.com (checked 2026-10-15).
-// Hides itself in the browser once the event is over.
-const ENDS = '2026-10-26';
+// Shown as a dropdown on the Events page; hides itself a month after the event.
+import ClipsGallery from './ClipsGallery.astro';
+import ResultsBoard from './ResultsBoard.astro';
+
+// Training clips and results are linked to this event by this name in admin.
+const COMPETITION = '2026 ISKF World Shoto Cup';
+// Stays up for a month after the event so results can be posted.
+const HIDE_AFTER = '2026-11-25';
 const site = 'https://worldshotocup.mx/';
 const schedule = [
   { day: 'Wednesday, October 21', items: [['9:00 am to 5:00 pm', 'Check-in and registration, Hampton Inn by Hilton lobby']] },
@@ -50,11 +56,18 @@ const ld = {
   url: site,
 };
 ---
-<article class="feature-event" data-ends={ENDS}>
+<details class="event-item feature-event" data-hide-after={HIDE_AFTER} id="world-shoto-cup">
+  <summary>
+    <span class="event-date" aria-hidden="true"><b>Oct</b>22–25</span>
+    <span class="event-sum">
+      <span class="event-kind">ISKF World Championship</span>
+      <span class="event-title">5th ISKF World Shoto Cup</span>
+      <span class="event-where">October 22 to 25, 2026 · Mérida, Yucatán, Mexico</span>
+    </span>
+    <span class="event-toggle" aria-hidden="true"></span>
+  </summary>
+  <div class="event-body">
   <div class="feature-head">
-    <p class="event-kind">ISKF World Championship</p>
-    <h2>5th ISKF World Shoto Cup</h2>
-    <p class="feature-meta"><strong>October 22 to 25, 2026</strong> · Mérida, Yucatán, Mexico</p>
     <p>Shotokan karateka from ISKF clubs around the world meet in Mérida for four days of seminars, dan examinations and the world tournament in kata and kumite. The event is led by ISKF Chief Instructor Shihan Hiroyoshi Okazaki and hosted by ISKF México.</p>
     <p class="feature-links">
       <a class="btn btn-primary" href={site} target="_blank" rel="noopener">Official event site</a>
@@ -99,10 +112,23 @@ const ld = {
     <p>More than 100 individual and team divisions in kata and kumite, from age 7 to 55+ and from green belt to black belt. Competitors enter through their national ISKF organization. The published entry deadline was August 31, 2026, and dan and judge exam sign-up closed August 10, so talk to Sensei Tyler if you are thinking of going.</p>
     <p class="muted small">Organizer contact: worldshotocup2026@hotmail.com · WhatsApp +52 999 324 5527</p>
   </section>
+
+  <section class="feature-foot">
+    <h3>Our team's training</h3>
+    <ClipsGallery competition={COMPETITION} empty="Clips of our team training for the Cup will be posted here." />
+  </section>
+
+  <section class="feature-foot">
+    <h3>Results</h3>
+    <ResultsBoard competition={COMPETITION} empty="Our team's results will be posted here after the tournament." />
+  </section>
+  </div>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-</article>
+</details>
 <script>
-  document.querySelectorAll<HTMLElement>('.feature-event[data-ends]').forEach((el) => {
-    if (new Date() >= new Date(el.dataset.ends + 'T12:00:00Z')) el.remove();
+  document.querySelectorAll<HTMLElement>('.feature-event[data-hide-after]').forEach((el) => {
+    if (new Date() >= new Date(el.dataset.hideAfter + 'T12:00:00Z')) el.remove();
   });
+  // Opens the dropdown when someone lands on #world-shoto-cup.
+  if (location.hash === '#world-shoto-cup') (document.getElementById('world-shoto-cup') as HTMLDetailsElement | null)?.setAttribute('open', '');
 </script>

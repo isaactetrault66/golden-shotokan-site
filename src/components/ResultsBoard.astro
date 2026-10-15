@@ -1,0 +1,35 @@
+---
+// Tournament results from admin, grouped by tournament with a medal count.
+const { competition = '', empty = 'No results posted yet.' } = Astro.props;
+---
+<div class="results" data-results data-competition={competition} data-empty={empty}>
+  <p class="muted">Loading results…</p>
+</div>
+<script>
+  const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
+  const fmtDate = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const MEDAL: Record<string, string> = { '1st': 'gold', '2nd': 'silver', '3rd': 'bronze' };
+
+  function board(list: any[], showHead: boolean) {
+    const count = (p: string) => list.filter((r) => r.place === p).length;
+    const tally = [['1st', 'gold'], ['2nd', 'silver'], ['3rd', 'bronze']]
+      .map(([p, name]) => count(p) ? `<span class="tally-item" data-medal="${name}">${count(p)} ${name}</span>` : '').join('');
+    const rows = list.map((r) => `<tr><td><strong>${esc(r.athlete)}</strong>${r.note ? `<br><span class="muted">${esc(r.note)}</span>` : ''}</td><td>${esc(r.event_type)}${r.division ? `<br><span class="muted">${esc(r.division)}</span>` : ''}</td><td><span class="place" data-medal="${MEDAL[r.place] || ''}">${esc(r.place)}</span></td></tr>`).join('');
+    return `${showHead ? `<h2>${esc(list[0].competition)}</h2><p class="muted">${esc(fmtDate(list[0].competition_date))}</p>` : ''}
+      ${tally ? `<p class="tally">${tally}</p>` : ''}
+      <div class="results-table"><table><thead><tr><th scope="col">Athlete</th><th scope="col">Event</th><th scope="col">Place</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-results]').forEach(async (root) => {
+    const comp = root.dataset.competition || '';
+    let results: any[] = [];
+    try {
+      const r = await fetch('/api/results' + (comp ? `?competition=${encodeURIComponent(comp)}` : ''));
+      if (r.ok) results = (await r.json()).results || [];
+    } catch {}
+    if (!results.length) { root.innerHTML = `<p class="muted">${esc(root.dataset.empty)}</p>`; return; }
+    const groups = new Map<string, any[]>();
+    for (const r of results) { const k = `${r.competition_date}|${r.competition}`; groups.set(k, [...(groups.get(k) || []), r]); }
+    root.innerHTML = [...groups.values()].map((list) => `<section class="results-group">${board(list, !comp)}</section>`).join('');
+  });
+</script>
