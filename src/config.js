@@ -79,3 +79,12 @@ export const AFFILIATIONS = [
   { name: 'ISKF (International Shotokan Karate Federation)', url: 'https://www.iskf.com' },
   { name: 'ISKF Canada', url: 'https://www.iskfcanada.com' },
 ];
+
+// Training clips hosted with the site (in public/video/training). Clips added
+// in admin are shown alongside these.
+export const TRAINING_CLIPS = [
+  { title: 'Kumite practice: black belts', file: 'kumite-1', competition: '2026 ISKF World Shoto Cup', recorded_on: '2026-10-14' },
+  { title: 'Kumite practice: black belts, round 2', file: 'kumite-2', competition: '2026 ISKF World Shoto Cup', recorded_on: '2026-10-14' },
+  { title: 'Kumite practice: juniors', file: 'kumite-3', competition: '2026 ISKF World Shoto Cup', recorded_on: '2026-10-14' },
+  { title: 'Kumite practice: black belts, round 3', file: 'kumite-4', competition: '2026 ISKF World Shoto Cup', recorded_on: '2026-10-14' },
+];

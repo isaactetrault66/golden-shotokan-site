@@ -8,11 +8,13 @@ const { competition = '', empty = 'No training clips yet.' } = Astro.props;
 </div>
 <script>
   import { parseVideoUrl } from '../../lib/forms.js';
+  import { TRAINING_CLIPS } from '../config.js';
   const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
   const fmtDate = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
   // YouTube shows a thumbnail first and only loads the player when pressed.
   function player(c: any) {
+    if (c.file) return `<video controls playsinline preload="none" poster="/video/training/${esc(c.file)}.jpg" src="/video/training/${esc(c.file)}.mp4"></video>`;
     const v = parseVideoUrl(c.url);
     if (!v) return '';
     if (v.kind === 'youtube')
@@ -25,11 +27,12 @@ const { competition = '', empty = 'No training clips yet.' } = Astro.props;
 
   document.querySelectorAll<HTMLElement>('[data-clips]').forEach(async (root) => {
     const comp = root.dataset.competition || '';
-    let clips: any[] = [];
+    let clips: any[] = TRAINING_CLIPS.filter((c) => !comp || c.competition === comp);
     try {
       const r = await fetch('/api/clips' + (comp ? `?competition=${encodeURIComponent(comp)}` : ''));
-      if (r.ok) clips = (await r.json()).clips || [];
+      if (r.ok) clips = [...((await r.json()).clips || []), ...clips];
     } catch {}
+    clips.sort((a, b) => (b.recorded_on || '').localeCompare(a.recorded_on || ''));
     if (!clips.length) { root.innerHTML = `<p class="muted">${esc(root.dataset.empty)}</p>`; return; }
     if (comp) root.innerHTML = `<div class="clip-grid">${clips.map(card).join('')}</div>`;
     else {
