@@ -22,6 +22,10 @@ import JoinCallout from '../components/JoinCallout.astro';
       </div>
       <h2 class="event-list-head">Club events</h2>
       <EventsList />
+      <div data-past-section hidden>
+        <h2 class="event-list-head">Past events</h2>
+        <div class="event-list" data-past-list></div>
+      </div>
     </div>
   </section>
   <JoinCallout />

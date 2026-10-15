@@ -248,6 +248,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .event-body > :first-child { margin-top: 1em; }
 .feature-event .event-body { padding-top: 8px; }
 .feature-event .event-date { background: var(--red); }
+.event-past .event-date, .feature-event.event-past .event-date { background: var(--muted); }
 @media (max-width: 560px) {
   .event-item > summary { gap: 12px; padding: 14px; }
   .event-date { width: 3.9em; font-size: 1.05rem; }

@@ -1,13 +1,12 @@
 ---
 // Featured ISKF event. Details from worldshotocup.mx and iskf.com (checked 2026-10-15).
-// Shown as a dropdown on the Events page; hides itself a month after the event.
+// Shown as a dropdown on the Events page; moves to Past events once it is over.
 import ClipsGallery from './ClipsGallery.astro';
 import ResultsBoard from './ResultsBoard.astro';
 
 // Training clips and results are linked to this event by this name in admin.
 const COMPETITION = '2026 ISKF World Shoto Cup';
-// Stays up for a month after the event so results can be posted.
-const HIDE_AFTER = '2026-11-25';
+const ENDS = '2026-10-25';
 const site = 'https://worldshotocup.mx/';
 const schedule = [
   { day: 'Wednesday, October 21', items: [['9:00 am to 5:00 pm', 'Check-in and registration, Hampton Inn by Hilton lobby']] },
@@ -56,7 +55,7 @@ const ld = {
   url: site,
 };
 ---
-<details class="event-item feature-event" data-hide-after={HIDE_AFTER} id="world-shoto-cup">
+<details class="event-item feature-event" data-ends={ENDS} data-date="2026-10-22" id="world-shoto-cup">
   <summary>
     <span class="event-date" aria-hidden="true"><b>Oct</b>22–25</span>
     <span class="event-sum">
@@ -126,8 +125,14 @@ const ld = {
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </details>
 <script>
-  document.querySelectorAll<HTMLElement>('.feature-event[data-hide-after]').forEach((el) => {
-    if (new Date() >= new Date(el.dataset.hideAfter + 'T12:00:00Z')) el.remove();
+  // The day after it ends (Golden time), it moves to Past events.
+  document.querySelectorAll<HTMLElement>('.feature-event[data-ends]').forEach((el) => {
+    const past = document.querySelector('[data-past-list]');
+    if (past && Date.now() >= new Date(el.dataset.ends + 'T00:00:00-06:00').getTime() + 86400_000) {
+      el.classList.add('event-past');
+      past.prepend(el);
+      past.closest<HTMLElement>('[data-past-section]')!.hidden = false;
+    }
   });
   // Opens the dropdown when someone lands on #world-shoto-cup.
   if (location.hash === '#world-shoto-cup') (document.getElementById('world-shoto-cup') as HTMLDetailsElement | null)?.setAttribute('open', '');

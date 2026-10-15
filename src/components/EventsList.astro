@@ -8,7 +8,6 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
   <div class="event-list" data-events-list>
     {showEmpty && <p class="muted">Loading events…</p>}
   </div>
-  <div data-events-recent></div>
 </div>
 <script>
   import { fmtRange } from '../config.js';
@@ -20,7 +19,7 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
     return `<b>${t.toLocaleDateString('en-CA', { month: 'short', timeZone: 'UTC' }).replace('.', '')}</b>${t.getUTCDate()}`;
   };
   // Title and date up front; time, place and the full write-up in the dropdown.
-  const card = (e: any) => `<details class="event-item event" data-kind="${esc(e.kind)}">
+  const card = (e: any, past = false) => `<details class="event-item event${past ? ' event-past' : ''}" data-kind="${esc(e.kind)}" data-date="${esc(e.date)}">
       <summary>
         <span class="event-date" aria-hidden="true">${short(e.date)}</span>
         <span class="event-sum">
@@ -36,9 +35,19 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
       </div>
     </details>`;
 
+  // Past events, newest first, alongside any featured event that has finished.
+  function showPast(past: any[]) {
+    const list = document.querySelector<HTMLElement>('[data-past-list]');
+    if (!list) return;
+    list.insertAdjacentHTML('beforeend', past.map((e) => card(e, true)).join(''));
+    [...list.children].sort((a, b) => ((b as HTMLElement).dataset.date || '').localeCompare((a as HTMLElement).dataset.date || '')).forEach((el) => list.appendChild(el));
+    list.closest<HTMLElement>('[data-past-section]')!.hidden = !list.children.length;
+  }
+
   fetch('/api/events')
     .then((r) => (r.ok ? r.json() : null))
     .then((data) => {
+      showPast(data?.past || []);
       document.querySelectorAll<HTMLElement>('[data-events]').forEach((root) => {
         const list = root.querySelector('[data-events-list]')!;
         const showEmpty = !!root.dataset.showEmpty;
@@ -49,11 +58,7 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
         }
         root.hidden = false;
         root.closest<HTMLElement>('[data-events-section]')?.removeAttribute('hidden');
-        list.innerHTML = upcoming.map(card).join('');
-        if (showEmpty && data.recent?.length) {
-          root.querySelector('[data-events-recent]')!.innerHTML =
-            `<h2 style="margin-top:48px">Recent events</h2><ul>${data.recent.map((e: any) => `<li>${esc(fmtDate(e.date))}: ${esc(e.title)}</li>`).join('')}</ul>`;
-        }
+        list.innerHTML = upcoming.map((e: any) => card(e)).join('');
         // Event structured data for Google (it renders JavaScript).
         const ld = upcoming.filter((e: any) => e.kind !== 'Closure').map((e: any) => ({
           '@context': 'https://schema.org',
@@ -76,6 +81,7 @@ const { limit = 50, showEmpty = true, heading = '' } = Astro.props;
       });
     })
     .catch(() => {
+      showPast([]);
       document.querySelectorAll<HTMLElement>('[data-events][data-show-empty="1"] [data-events-list]').forEach((l) => (l.innerHTML = '<p class="muted">Events could not be loaded. Regular classes run every Monday and Wednesday.</p>'));
     });
 </script>

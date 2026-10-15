@@ -1,4 +1,4 @@
-// GET /api/events: published upcoming events, plus a few recent ones.
+// GET /api/events: published upcoming events, plus past events from the last two years.
 import { json } from '../../lib/http.js';
 
 export async function onRequestGet({ env }) {
@@ -6,6 +6,7 @@ export async function onRequestGet({ env }) {
   const today = new Date(Date.now() - 6 * 3600_000).toISOString().slice(0, 10);
   const cols = 'id, title, kind, date, start_time, end_time, location, description';
   const upcoming = await env.DB.prepare(`SELECT ${cols} FROM events WHERE published = 1 AND date >= ? ORDER BY date, start_time LIMIT 50`).bind(today).all();
-  const recent = await env.DB.prepare(`SELECT ${cols} FROM events WHERE published = 1 AND date < ? AND kind != 'Closure' ORDER BY date DESC LIMIT 5`).bind(today).all();
-  return json({ upcoming: upcoming.results, recent: recent.results }, 200, { 'Cache-Control': 'public, max-age=300' });
+  const since = new Date(Date.parse(today) - 730 * 86400_000).toISOString().slice(0, 10);
+  const past = await env.DB.prepare(`SELECT ${cols} FROM events WHERE published = 1 AND date < ? AND date >= ? AND kind != 'Closure' ORDER BY date DESC LIMIT 30`).bind(today, since).all();
+  return json({ upcoming: upcoming.results, past: past.results }, 200, { 'Cache-Control': 'public, max-age=300' });
 }
