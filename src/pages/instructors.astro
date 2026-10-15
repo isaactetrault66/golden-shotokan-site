@@ -2,9 +2,13 @@
 import Base from '../layouts/Base.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 
-// TODO: bio and photo for each instructor.
 const instructors = [
-  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: 'Sensei Tyler leads every Monday and Wednesday class. A longer bio is coming soon.', video: 'tyler-bow', wide: 'tyler-shomen' },
+  { name: 'Sensei Tyler Tetrault', role: 'Head Instructor', rank: '4th degree black belt (Yondan), ISKF', bio: [
+    'Sensei Tyler first stepped into a Shotokan dojo at 16. He trained hard through his teenage years, then stepped away from karate at 19 as work and life took over.',
+    'At 34 he came back to the dojo, and this time he stayed. He started again with the basics, trained steadily through the ranks, and earned his 4th degree black belt. Along the way he went from student to instructor to sensei, and eventually opened his own dojo here in Golden.',
+    'For years Sensei Tyler has competed at the provincial, national and world levels. He brings that experience to every class, along with the patience of someone who knows what it is like to start over.',
+    'He still trains, still competes and is still learning. Today he leads every Monday and Wednesday class, and his goal is simple: to help each new student grow the way karate helped him.',
+  ], video: 'tyler-bow' },
 ];
 ---
 <Base
@@ -29,13 +33,7 @@ const instructors = [
             <p class="eyebrow">{i.role}</p>
             <h2>{i.name}</h2>
             <p class="profile-rank">{i.rank}</p>
-            <p>{i.bio}</p>
-            {i.wide && (
-              <video class="profile-wide" autoplay muted loop playsinline poster={`/video/${i.wide}.jpg`} aria-label={`${i.name} bowing at the front of the dojo`} width="1280" height="720">
-                <source src={`/video/${i.wide}.webm`} type="video/webm" />
-                <source src={`/video/${i.wide}.mp4`} type="video/mp4" />
-              </video>
-            )}
+            {i.bio.map((para) => <p>{para}</p>)}
           </div>
         </article>
       ))}

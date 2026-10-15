@@ -200,7 +200,6 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .profile-body .eyebrow { color: var(--red); text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; font-weight: 700; margin-bottom: 6px; }
 .profile-body h2 { margin-bottom: 4px; }
 .profile-rank { color: var(--navy); font-weight: 600; }
-.profile-wide { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); margin-top: 12px; background: #16204f; }
 @media (max-width: 760px) { .profile { grid-template-columns: 1fr; padding: 20px; } .profile-video { max-width: 320px; margin: 0 auto; } }
 .kata-demo { display: grid; grid-template-columns: 1fr minmax(220px, 360px); gap: 40px; align-items: center; margin-top: 40px; }
 .kata-demo video { width: 100%; height: auto; aspect-ratio: 9 / 16; border-radius: var(--radius); background: #16204f; }
