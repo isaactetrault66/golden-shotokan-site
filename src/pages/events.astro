@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import EventsList from '../components/EventsList.astro';
+import WorldShotoCup from '../components/WorldShotoCup.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 ---
 <Base
@@ -15,6 +16,8 @@ import JoinCallout from '../components/JoinCallout.astro';
   </section>
   <section class="section">
     <div class="wrap">
+      <WorldShotoCup />
+      <h2>Club events</h2>
       <EventsList />
     </div>
   </section>

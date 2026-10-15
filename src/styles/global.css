@@ -204,3 +204,26 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--red); outli
 .kata-demo { display: grid; grid-template-columns: 1fr minmax(220px, 360px); gap: 40px; align-items: center; margin-top: 40px; }
 .kata-demo video { width: 100%; height: auto; aspect-ratio: 9 / 16; border-radius: var(--radius); background: #16204f; }
 @media (max-width: 760px) { .kata-demo { grid-template-columns: 1fr; } .kata-demo video { max-width: 320px; margin: 0 auto; } }
+
+/* Featured ISKF event on the Events page */
+.feature-event { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; }
+.feature-head h2 { margin: 0 0 .2em; }
+.feature-meta { font-size: 1.1rem; }
+.feature-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.2em; }
+.feature-grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.feature-event h3 { margin-top: 0; }
+.feature-grid section + section { margin-top: 24px; }
+.feature-schedule { margin: 0 0 1em; }
+.feature-schedule dt { font-weight: 700; margin-top: 1em; }
+.feature-schedule dt:first-child { margin-top: 0; }
+.feature-schedule dd { margin: .3em 0 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 8px; }
+.feature-schedule dd span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.feature-fees { width: 100%; border-collapse: collapse; }
+.feature-fees th, .feature-fees td { padding: 8px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; vertical-align: top; }
+.feature-fees td { text-align: right; font-weight: 600; padding-left: 12px; }
+.feature-foot { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.small { font-size: .9rem; }
+@media (max-width: 560px) {
+  .feature-event { padding: 22px; }
+  .feature-schedule dd { grid-template-columns: 1fr; gap: 0; }
+}
