@@ -4,6 +4,9 @@ import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import EventsList from '../components/EventsList.astro';
 import Prices from '../components/Prices.astro';
+import { Picture } from 'astro:assets';
+import teamPhoto from '../assets/team.jpg';
+import logoImg from '../assets/logo.png';
 import { SITE, PRICING, AGE_GUIDE, DOJO_KUN } from '../config.js';
 
 const explore = [
@@ -40,7 +43,7 @@ const explore = [
         <li><strong>ISKF</strong> member club</li>
       </ul>
       </div>
-      <img class="hero-logo" src="/images/logo.png" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" width="512" height="512" />
+      <Picture class="hero-logo" src={logoImg} formats={['avif', 'webp']} widths={[300, 600]} sizes="300px" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" loading="eager" fetchpriority="high" />
     </div>
     <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
       <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" /><rect x="7" y="1" width="3" height="10" /></svg>
@@ -138,7 +141,7 @@ const explore = [
 
   <section class="section">
     <div class="wrap two-col">
-      <img src="/images/team.jpg" alt="Golden Shotokan Karate Society karate students and instructors with their medals at the dojo in Golden, BC" width="1350" height="734" loading="lazy" style="border-radius:10px" />
+      <Picture class="rounded" src={teamPhoto} formats={['avif', 'webp']} widths={[480, 800, 1350]} sizes="(max-width: 800px) 100vw, 534px" alt="Golden Shotokan Karate Society karate students and instructors with their medals at the dojo in Golden, BC" />
       <div>
         <h2>Why train with us</h2>
         <ul>
