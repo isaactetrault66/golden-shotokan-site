@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
-const mapQuery = encodeURIComponent(`${SITE.name}, ${SITE.city}, ${SITE.region}`);
+const address = `${SITE.street}, ${SITE.city}, ${SITE.region} ${SITE.postalCode}`;
+const mapQuery = encodeURIComponent(address);
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
 ---
 <Base
   title="Contact and Directions: Karate in Golden, BC"
@@ -17,23 +19,24 @@ const mapQuery = encodeURIComponent(`${SITE.name}, ${SITE.city}, ${SITE.region}`
     <div class="wrap two-col">
       <div>
         <h2>{SITE.name}</h2>
-        <address style="font-style:normal">
-          {SITE.street}<br />{SITE.city}, {SITE.region} {SITE.postalCode}<br /><br />
-          Phone: <a href={`tel:${SITE.phone.replace(/[^\d+]/g, '')}`}>{SITE.phone}</a><br />
-          Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <address style="font-style:normal" class="contact-list">
+          <span>{SITE.street}<br />{SITE.city}, {SITE.region} {SITE.postalCode}</span>
+          <span>Phone: <a href={`tel:${SITE.phone.replace(/[^\d+]/g, '')}`}>{SITE.phone}</a></span>
+          <span>Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></span>
         </address>
-        <h3 style="margin-top:24px">Class times</h3>
+        <h3>Class times</h3>
         <ul>{DEFAULT_SCHEDULE.map((c) => <li>{c.day}, {fmtRange(c.start, c.end)}: {c.name}</li>)}</ul>
         <h3>Parking and getting here</h3>
         <p>Enter by the <strong>{SITE.entrance.charAt(0).toLowerCase() + SITE.entrance.slice(1)}</strong>, {SITE.street}.</p>
         <p><a class="btn btn-primary" href="/inquire">Send us a message</a></p>
       </div>
-      <div>
+      <div class="contact-map">
         <iframe
-          title="Map to Golden Shotokan Karate Society"
+          title={`Map of ${address}`}
           src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-          width="100%" height="380" style="border:0;border-radius:10px" loading="lazy"
+          loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p><a class="btn btn-ghost" href={directions} rel="noopener">Get directions in Google Maps</a></p>
       </div>
     </div>
   </section>

@@ -1,7 +1,9 @@
 ---
 import BCAcknowledgement from '../components/BCAcknowledgement.astro';
 import { SITE, DEFAULT_SCHEDULE, fmtRange } from '../config.js';
+import '@fontsource/shippori-mincho/latin-700.css';
 import '../styles/global.css';
+import mincho700 from '@fontsource/shippori-mincho/files/shippori-mincho-latin-700-normal.woff2?url';
 
 const { title, description, schema = [], noindex = false } = Astro.props;
 const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
@@ -65,6 +67,7 @@ const path = cleanPath;
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#1d2a6b" />
+    <link rel="preload" href={mincho700} as="font" type="font/woff2" crossorigin />
     {!noindex && schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
   <body>
@@ -75,9 +78,8 @@ const path = cleanPath;
           <img src="/images/logo-96.png" alt="" width="48" height="48" />
           <span><strong>Golden Shotokan</strong><small>Karate Society · ISKF</small></span>
         </a>
-        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu" />
-        <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span></label>
-        <nav aria-label="Main">
+        <button type="button" class="nav-burger" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span></button>
+        <nav id="site-nav" aria-label="Main">
           <ul>
             {nav.map(([href, label]) => (
               <li><a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
@@ -87,6 +89,20 @@ const path = cleanPath;
         </nav>
       </div>
     </header>
+    <script>
+      // Phone menu: open and close with the button, close with Escape or a tap outside.
+      const header = document.querySelector('.site-header')!;
+      const burger = header.querySelector('.nav-burger') as HTMLButtonElement;
+      const setOpen = (open: boolean) => {
+        header.classList.toggle('nav-open', open);
+        burger.setAttribute('aria-expanded', String(open));
+      };
+      burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && header.classList.contains('nav-open')) { setOpen(false); burger.focus(); }
+      });
+      document.addEventListener('click', (e) => { if (!header.contains(e.target as Node)) setOpen(false); });
+    </script>
     <main id="main">
       <slot />
     </main>
