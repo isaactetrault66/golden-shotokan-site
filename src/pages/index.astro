@@ -4,6 +4,9 @@ import Schedule from '../components/Schedule.astro';
 import JoinCallout from '../components/JoinCallout.astro';
 import EventsList from '../components/EventsList.astro';
 import Prices from '../components/Prices.astro';
+import { Picture } from 'astro:assets';
+import teamPhoto from '../assets/team.jpg';
+import logoImg from '../assets/logo.png';
 import { SITE, PRICING, AGE_GUIDE, DOJO_KUN } from '../config.js';
 
 const explore = [
@@ -27,7 +30,6 @@ const explore = [
     <div class="hero-tint" aria-hidden="true"></div>
     <div class="wrap hero-inner">
       <div>
-      <p class="eyebrow">Golden, British Columbia</p>
       <h1>Shotokan Karate in Golden, BC</h1>
       <p class="lead">Traditional ISKF karate for teens and adults. Build confidence, fitness and self-defence skills in one of the most affordable activities in Golden. Beginners welcome, no experience needed.</p>
       <div class="hero-actions">
@@ -41,8 +43,12 @@ const explore = [
         <li><strong>ISKF</strong> member club</li>
       </ul>
       </div>
-      <img class="hero-logo" src="/images/logo.png" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" width="512" height="512" />
+      <Picture class="hero-logo" src={logoImg} formats={['avif', 'webp']} widths={[300, 600]} sizes="300px" alt="Golden Shotokan Karate Society logo: a red and navy yin-yang mandala" loading="eager" fetchpriority="high" />
     </div>
+    <button type="button" class="motion-toggle" aria-pressed="false" data-motion-toggle>
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" /><rect x="7" y="1" width="3" height="10" /></svg>
+      <span>Pause motion</span>
+    </button>
   </section>
 
   <section class="kun-strip" aria-label="The dojo kun">
@@ -67,7 +73,7 @@ const explore = [
           </div>
         ))}
       </div>
-      <p style="margin-top:20px"><a href="/classes">See classes and pricing →</a></p>
+      <p style="margin-top:20px"><a class="link-more" href="/classes">See classes and pricing</a></p>
     </div>
   </section>
 
@@ -78,7 +84,7 @@ const explore = [
     </video>
     <div class="band-tint" aria-hidden="true"></div>
     <div class="wrap band-inner">
-      <p class="eyebrow">Rei · 礼</p>
+      <p class="band-kicker"><span lang="ja">礼</span> Rei, the bow</p>
       <h2 id="rei-heading">Karate begins and ends with respect</h2>
       <p>Every class at our dojo opens and closes with a bow. It's the first of Gichin Funakoshi's twenty precepts, and it's how our students greet each other, their instructors and the training floor.</p>
     </div>
@@ -89,7 +95,7 @@ const explore = [
     if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         for (const e of entries) {
-          if (!e.isIntersecting) { v.pause(); continue; }
+          if (!e.isIntersecting || document.body.classList.contains('motion-paused')) { v.pause(); continue; }
           if (!v.dataset.loaded) {
             v.querySelectorAll('source').forEach((s) => (s.src = s.dataset.src!));
             v.load();
@@ -100,6 +106,22 @@ const explore = [
       }, { rootMargin: '200px' });
       io.observe(v);
     }
+
+    // Pause button for the hero video, the bowing video and the dojo kun ticker.
+    const toggle = document.querySelector('[data-motion-toggle]') as HTMLButtonElement | null;
+    toggle?.addEventListener('click', () => {
+      const paused = document.body.classList.toggle('motion-paused');
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.querySelector('span')!.textContent = paused ? 'Play motion' : 'Pause motion';
+      toggle.querySelector('svg')!.innerHTML = paused
+        ? '<path d="M2 1 L11 6 L2 11 Z" />'
+        : '<rect x="2" y="1" width="3" height="10" /><rect x="7" y="1" width="3" height="10" />';
+      document.querySelectorAll('video[autoplay], [data-lazy-video]').forEach((el) => {
+        const vid = el as HTMLVideoElement;
+        if (paused) vid.pause();
+        else if (vid === v ? v.dataset.loaded : true) vid.play().catch(() => {});
+      });
+    });
   </script>
 
   <section class="section section-alt">
@@ -119,7 +141,7 @@ const explore = [
 
   <section class="section">
     <div class="wrap two-col">
-      <img src="/images/team.jpg" alt="Golden Shotokan Karate Society karate students and instructors with their medals at the dojo in Golden, BC" width="1350" height="734" loading="lazy" style="border-radius:10px" />
+      <Picture class="rounded" src={teamPhoto} formats={['avif', 'webp']} widths={[480, 800, 1350]} sizes="(max-width: 800px) 100vw, 534px" alt="Golden Shotokan Karate Society karate students and instructors with their medals at the dojo in Golden, BC" />
       <div>
         <h2>Why train with us</h2>
         <ul>
@@ -128,7 +150,7 @@ const explore = [
           <li><strong>Beginner friendly.</strong> No martial arts experience or fitness level needed to start.</li>
           <li><strong>Affordable.</strong> One fee per term covers your uniform, insurance and training.</li>
         </ul>
-        <a href="/about">About our club →</a>
+        <a class="link-more" href="/about">About our club</a>
       </div>
     </div>
   </section>
@@ -138,7 +160,7 @@ const explore = [
       <h2>Explore the dojo</h2>
       <div class="grid">
         {explore.map(([href, title, text]) => (
-          <a class="card" href={href}><h3>{title} →</h3><p>{text}</p></a>
+          <a class="card" href={href}><h3>{title}</h3><p>{text}</p></a>
         ))}
       </div>
     </div>
@@ -155,7 +177,7 @@ const explore = [
       <h2>Find us in Golden</h2>
       <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.postalCode}</p>
       <p>Enter by the {SITE.entrance.charAt(0).toLowerCase() + SITE.entrance.slice(1)}.</p>
-      <p><a href="/contact">Directions, parking and contact details →</a></p>
+      <p><a class="link-more" href="/contact">Directions, parking and contact details</a></p>
     </div>
   </section>
 

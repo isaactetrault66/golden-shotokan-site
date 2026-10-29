@@ -17,7 +17,7 @@ import { TURNSTILE_SITE_KEY, SITE } from '../config.js';
       <form class="stack" id="inquiry-form" method="post" action="/api/inquire" novalidate>
         <p class="required-note">Fields marked * are required.</p>
         <div class="row-2">
-          <label>Your name *<input name="name" required autocomplete="name" maxlength="120" /></label>
+          <div class="field"><label>Your name *<input name="name" required autocomplete="name" maxlength="120" /></label></div>
           <label>Interested in
             <select name="interest">
               <option value="">Choose one</option>
@@ -30,12 +30,14 @@ import { TURNSTILE_SITE_KEY, SITE } from '../config.js';
           </label>
         </div>
         <div class="row-2">
-          <label>Email *<input type="email" name="email" required autocomplete="email" maxlength="200" /></label>
+          <div class="field"><label>Email *<input type="email" name="email" required autocomplete="email" maxlength="200" /></label></div>
           <label>Phone (optional)<input type="tel" name="phone" autocomplete="tel" maxlength="40" /></label>
         </div>
-        <label>Your message *<span class="hint">For example: who would be training, their age and any experience, and any questions</span>
-          <textarea name="message" rows="5" required maxlength="2000"></textarea>
-        </label>
+        <div class="field">
+          <label>Your message *<span class="hint">For example: who would be training, their age and any experience, and any questions</span>
+            <textarea name="message" rows="5" required maxlength="2000"></textarea>
+          </label>
+        </div>
         <label>How did you hear about us?
           <select name="referral">
             <option value="">Choose one</option>
@@ -67,11 +69,46 @@ import { TURNSTILE_SITE_KEY, SITE } from '../config.js';
     const msg = document.getElementById('form-msg')!;
     const btn = document.getElementById('submit-btn') as HTMLButtonElement;
 
+    // Inline errors: shown under the field once the visitor leaves it, and for
+    // every field on submit, with focus moved to the first one to fix.
+    const messages: Record<string, (el: HTMLInputElement) => string> = {
+      name: () => 'Enter your name so we know who to reply to.',
+      email: (el) => (el.validity.valueMissing ? 'Enter your email so we can reply.' : 'Enter an email address like name@example.com.'),
+      message: () => 'Tell us who would like to train, or ask your question.',
+    };
+    const fields = Object.keys(messages).map((n) => form.elements.namedItem(n) as HTMLInputElement);
+    const check = (el: HTMLInputElement) => {
+      const id = `err-${el.name}`;
+      let err = document.getElementById(id);
+      if (el.validity.valid) {
+        el.removeAttribute('aria-invalid');
+        el.removeAttribute('aria-describedby');
+        err?.remove();
+        return true;
+      }
+      if (!err) {
+        err = document.createElement('p');
+        err.id = id;
+        err.className = 'field-error';
+        err.style.margin = '0';
+        el.closest('.field')!.append(err);
+      }
+      err.textContent = messages[el.name](el);
+      el.setAttribute('aria-invalid', 'true');
+      el.setAttribute('aria-describedby', id);
+      return false;
+    };
+    fields.forEach((el) => {
+      el.addEventListener('blur', () => { if (el.value || el.hasAttribute('aria-invalid')) check(el); });
+      el.addEventListener('input', () => { if (el.hasAttribute('aria-invalid')) check(el); });
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       msg.className = 'form-msg';
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      const invalid = fields.filter((el) => !check(el));
+      if (invalid.length) {
+        invalid[0].focus();
         return;
       }
       btn.disabled = true;
